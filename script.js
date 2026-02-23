@@ -1,3 +1,6 @@
+// ====== EMAILJS INIT ======
+emailjs.init("YdalPlh-x2bdL6eFV");
+
 // ====== NAVIGATION ======
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -17,10 +20,7 @@ function showToast(msg, type = 'success') {
   setTimeout(() => { t.className = ''; }, 3000);
 }
 
-// ====== CONTACT FORM SUBMISSION ======
-async function submitContactForm(e) {
-emailjs.init("YdalPlh-x2bdL6eFV");
-
+// ====== CONTACT FORM ======
 function submitContactForm(e) {
   e.preventDefault();
 
@@ -47,14 +47,13 @@ function submitContactForm(e) {
       console.error(error);
     });
 }
-}
 
+// ====== RESET FORM ======
 function resetContactForm() {
   document.getElementById('contact-form').reset();
   document.getElementById('contact-form').style.display = 'flex';
   document.getElementById('cf-success').style.display = 'none';
   const btn = document.getElementById('cf-submit-btn');
   btn.textContent = 'Send Message';
-  btn.classList.remove('btn-loading');
-
+  btn.disabled = false;
 }
