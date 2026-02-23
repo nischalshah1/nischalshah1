@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Nischal Shah</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Portfolio.</div>
+  <nav>
+    <a class="active" onclick="showPage('home')">Home</a>
+    <a onclick="showPage('achievements')">Achievements</a>
+    <a onclick="showPage('skills')">Skills</a>
+    <a onclick="showPage('about')">About</a>
+    <a onclick="showPage('contact')">Contact</a>
+  </nav>
+</header>
+
+<!-- ====== HOME ====== -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div>
+      <div class="hero-tag">Hi there</div>
+      <h1 class="hero-title">Nischal<br><em>Shah</em></h1>
+      <p class="hero-subtitle">
+        Qualified for IJSO 22', Colombia | NAO &amp; NYPT Finalist 25' | Astronomy Enthusiast 🔭 | 🇳🇵
+      </p>
+      <p class="hero-subtitle" style="margin-top:1rem;">
+        A curious science student with a passion for physics, chemistry, and problem solving. Focused on academic excellence, research projects, and building real-world skills.
+      </p>
+      <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;">
+        <button class="btn btn-accent" onclick="showPage('achievements')">View Achievements</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="profile-img-wrapper">
+        <img id="profile-image" src="me.jpg" alt="Profile Photo">
+        <div class="profile-img-overlay">Me in 2023</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== ACHIEVEMENTS ====== -->
+<div id="page-achievements" class="page">
+  <section>
+    <div class="section-label">02 — Achievements</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;">
+      <h2 class="section-title" style="margin-bottom:0;">Selected<br><em style="font-style:italic;color:var(--accent2);">Achievements</em></h2>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-year">2022</div>
+        <div class="card-title">Grade 9</div>
+        <div class="card-desc">Qualified for IJSO 22', Colombia.</div>
+        <div class="card-tags">
+          <span class="tag">Problem Solving</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-year">2023</div>
+        <div class="card-title">Grade 10</div>
+        <div class="card-desc">President for ICDPS.</div>
+        <div class="card-tags">
+          <span class="tag">Public Speaking</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-year">2024</div>
+        <div class="card-title">Grade 11</div>
+        <div class="card-desc">NAO &amp; NYPT Finalist 25' — Waitlisted in YYGS.</div>
+        <div class="card-tags">
+          <span class="tag">Problem Solving</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ====== SKILLS ====== -->
+<div id="page-skills" class="page">
+  <section>
+    <div class="section-label">03 — Expertise</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;">
+      <h2 class="section-title" style="margin-bottom:0;">Skills &amp;<br><em style="font-style:italic;color:var(--accent2);">Tools</em></h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-item">
+        <div class="skill-name">Astronomy</div>
+        <div class="skill-level-bar">
+          <div class="skill-level-fill" style="width:90%"></div>
+        </div>
+        <div class="skill-level-text">Science · 90%</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Chemistry</div>
+        <div class="skill-level-bar">
+          <div class="skill-level-fill" style="width:93%"></div>
+        </div>
+        <div class="skill-level-text">Science · 93%</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">HTML</div>
+        <div class="skill-level-bar">
+          <div class="skill-level-fill" style="width:90%"></div>
+        </div>
+        <div class="skill-level-text">Language · 90%</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ====== ABOUT ====== -->
+<div id="page-about" class="page">
+  <section>
+    <div class="section-label">04 — About</div>
+    <div class="about-grid">
+      <div>
+        <h2 class="section-title">Who<br><em style="font-style:italic;color:var(--accent2);">I Am</em></h2>
+        <div class="about-text">
+          <p>Curious by nature and disciplined by choice. I'm a science student with a strong interest in physics, chemistry, technology, and problem solving. I enjoy turning complex concepts into clear ideas and believe consistency beats talent when talent doesn't work hard.</p>
+          <p>Currently focused on academic excellence, research oriented projects, and building skills that matter in the real world. Open to learning, collaboration, and opportunities that challenge my limits.</p>
+        </div>
+      </div>
+      <div class="about-details">
+        <div class="detail-row">
+          <span class="detail-label">Full Name</span>
+          <span class="detail-value">Nischal Shah</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Grade</span>
+          <span class="detail-value">Class 12 Science</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Location</span>
+          <span class="detail-value">Dharan, Nepal</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Email</span>
+          <span class="detail-value">college.nischal@gmail.com</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ====== CONTACT ====== -->
+<div id="page-contact" class="page">
+  <section>
+    <div class="section-label">05 — Connect</div>
+    <h2 class="section-title">Get In<br><em style="font-style:italic;color:var(--accent2);">Touch</em></h2>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-type">Email</div>
+        <div class="contact-value">college.nischal@gmail.com</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-type">LinkedIn</div>
+        <div class="contact-value">linkedin.com/in/nischalshah</div>
+      </div>
+    </div>
+    
+    <div class="contact-form-wrapper">
+      <div class="contact-form-header">
+        <div class="section-label" style="margin-bottom:0.5rem;">Send a Message</div>
+        <p class="contact-form-sub">Fill in the form below and I'll get back to you.</p>
+      </div>
+      <form class="contact-form" id="contact-form" onsubmit="submitContactForm(event)">
+        <div class="cf-row">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-input" id="cf-name" name="name" type="text" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your Email</label>
+            <input class="form-input" id="cf-email" name="email" type="email" placeholder="email@example.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <input class="form-input" id="cf-subject" name="subject" type="text" placeholder="Inquiry / Collaboration / ...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea cf-textarea" id="cf-message" name="message" placeholder="Hi there!!" required></textarea>
+        </div>
+        <div class="cf-footer">
+          <span class="cf-note">&#128274; Your message is saved securely.</span>
+          <button class="btn btn-accent" type="submit" id="cf-submit-btn">Send Message</button>
+        </div>
+      </form>
+      <div id="cf-success" class="cf-success" style="display:none;">
+        <div class="cf-success-icon">&#10003;</div>
+        <div class="cf-success-title">Message Sent!</div>
+        <div class="cf-success-sub">Thank you for reaching out. I'll reply soon.</div>
+        <button class="btn btn-muted" style="margin-top:1.5rem;" onclick="resetContactForm()">Send Another</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
