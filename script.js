@@ -19,41 +19,34 @@ function showToast(msg, type = 'success') {
 
 // ====== CONTACT FORM SUBMISSION ======
 async function submitContactForm(e) {
+emailjs.init("YdalPlh-x2bdL6eFV");
+
+function submitContactForm(e) {
   e.preventDefault();
 
-  const btn = document.getElementById('cf-submit-btn');
-  btn.textContent = 'Sending...';
-  btn.classList.add('btn-loading');
+  const btn = document.getElementById("cf-submit-btn");
+  btn.textContent = "Sending...";
+  btn.disabled = true;
 
-  const payload = {
-    name:    document.getElementById('cf-name').value.trim(),
-    email:   document.getElementById('cf-email').value.trim(),
-    subject: document.getElementById('cf-subject').value.trim(),
-    message: document.getElementById('cf-message').value.trim()
+  const params = {
+    name: document.getElementById("cf-name").value,
+    email: document.getElementById("cf-email").value,
+    subject: document.getElementById("cf-subject").value,
+    message: document.getElementById("cf-message").value,
   };
 
-  try {
-    const res = await fetch('contact_handler.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+  emailjs.send("service_gfc52dt", "template_onqwv1l", params)
+    .then(() => {
+      document.getElementById("contact-form").style.display = "none";
+      document.getElementById("cf-success").style.display = "block";
+    })
+    .catch((error) => {
+      alert("Failed to send message. Please try again.");
+      btn.textContent = "Send Message";
+      btn.disabled = false;
+      console.error(error);
     });
-
-    const data = await res.json();
-
-    if (data.success) {
-      document.getElementById('contact-form').style.display = 'none';
-      document.getElementById('cf-success').style.display = 'block';
-    } else {
-      showToast(data.message || 'Something went wrong. Try again.', 'error');
-      btn.textContent = 'Send Message';
-      btn.classList.remove('btn-loading');
-    }
-  } catch (err) {
-    showToast('Could not reach the server. Check your connection.', 'error');
-    btn.textContent = 'Send Message';
-    btn.classList.remove('btn-loading');
-  }
+}
 }
 
 function resetContactForm() {
@@ -63,4 +56,5 @@ function resetContactForm() {
   const btn = document.getElementById('cf-submit-btn');
   btn.textContent = 'Send Message';
   btn.classList.remove('btn-loading');
+
 }
