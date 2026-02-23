@@ -6,6 +6,7 @@
 <title>Portfolio — Nischal Shah</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
@@ -35,6 +36,13 @@
       </p>
       <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;">
         <button class="btn btn-accent" onclick="showPage('achievements')">View Achievements</button>
+<div class="social-icons">
+  <a href="mailto:college.nischal@gmail.com"><i class="fas envelope"></i></a>
+  <a href="https://github.com/nischalshah1"><i class="fab github"></i></a>
+  <a href="https://linkedin.com/in/nischal-shah-59a798250/"><i class="fab linkedin-in"></i></a>
+  <a href="https://instagram.com/unstablenebula/"><i class="fab instagram"></i></a>
+ <!-- <a href="https://discord.com/users/yourid"><i class="fab fa-discord"></i></a> -->
+</div>
       </div>
     </div>
     <div class="hero-right">
@@ -111,7 +119,7 @@
         <div class="skill-level-bar">
           <div class="skill-level-fill" style="width:30%"></div>
         </div>
-        <div class="skill-level-text">Science · 30%</div>
+        <div class="skill-level-text">Science · 40%</div>
       </div>
       <div class="skill-item">
         <div class="skill-name">Chemistry</div>
@@ -125,7 +133,7 @@
         <div class="skill-level-bar">
           <div class="skill-level-fill" style="width:90%"></div>
         </div>
-        <div class="skill-level-text">Language · 90%</div>
+        <div class="skill-level-text">Language · 70%</div>
       </div>
     </div>
   </section>
@@ -160,6 +168,10 @@
           <span class="detail-label">Email</span>
           <span class="detail-value">college.nischal@gmail.com</span>
         </div>
+        <div class="detail-row">
+          <span class="detail-label">Education</span>
+          <span class="detail-value">Delhi Public School, Dharan -> pre nursery to 10th <br> Trinity International College, Kathmandu -> 11th & 12th</span>
+        </div>
       </div>
     </div>
   </section>
@@ -178,14 +190,21 @@
       </div>
       <div class="contact-card">
         <div class="contact-type">LinkedIn</div>
-        <div class="contact-value">linkedin.com/in/nischalshah</div>
+        <div class="contact-value"><a href="https://www.linkedin.com/in/nischal-shah-59a798250/">linkedin.com/in/nischalshah</a></div>
+      </div>
+       <div class="contact-card">
+        <div class="contact-type">Instagram</div>
+        <div class="contact-value"><a href="https://www.instagram.com/unstablenebula/">instagram.com/unstablenebula</a></div>
       </div>
     </div>
     
     <div class="contact-form-wrapper">
       <div class="contact-form-header">
         <div class="section-label" style="margin-bottom:0.5rem;">Send a Message</div>
-        <p class="contact-form-sub">Fill in the form below and I'll get back to you.</p>
+        <p class="contact-form-sub">
+          Note: Curretly the contact form is not working we will get back to it soon 
+          
+          Fill in the form below and I'll get back to you.</p>
       </div>
       <form class="contact-form" id="contact-form" onsubmit="submitContactForm(event)">
         <div class="cf-row">
