@@ -23,18 +23,15 @@ function showToast(msg, type = 'success') {
 // ====== CONTACT FORM ======
 function submitContactForm(e) {
   e.preventDefault();
-
   const btn = document.getElementById("cf-submit-btn");
   btn.textContent = "Sending...";
   btn.disabled = true;
-
   const params = {
-    name: document.getElementById("cf-name").value,
-    email: document.getElementById("cf-email").value,
+    name:    document.getElementById("cf-name").value,
+    email:   document.getElementById("cf-email").value,
     subject: document.getElementById("cf-subject").value,
     message: document.getElementById("cf-message").value,
   };
-
   emailjs.send("service_gfc52dt", "template_onqwv1l", params)
     .then(() => {
       document.getElementById("contact-form").style.display = "none";
@@ -57,3 +54,60 @@ function resetContactForm() {
   btn.textContent = 'Send Message';
   btn.disabled = false;
 }
+
+// ====== THEME SWITCHER ======
+const themeIcons = {
+  dark:   '🌙',
+  light:  '☀️',
+  retro:  '📺',
+  love:   '💗',
+  ocean:  '🌊',
+  forest: '🌿'
+};
+
+function setTheme(theme) {
+  // Remove all theme classes
+  document.body.className = document.body.className
+    .replace(/theme-\S+/g, '').trim();
+
+  // Add new theme class (dark is default — no class needed)
+  if (theme !== 'dark') {
+    document.body.classList.add('theme-' + theme);
+  }
+
+  // Update icon in button
+  document.getElementById('theme-icon').textContent = themeIcons[theme];
+
+  // Mark active button in panel
+  document.querySelectorAll('.theme-opt').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === theme);
+  });
+
+  // Save preference so it persists on refresh
+  localStorage.setItem('portfolio-theme', theme);
+
+  // Close panel after selecting
+  closeThemePanel();
+}
+
+function toggleThemePanel() {
+  document.getElementById('theme-panel').classList.toggle('open');
+}
+
+function closeThemePanel() {
+  document.getElementById('theme-panel').classList.remove('open');
+}
+
+// Close panel when clicking anywhere outside it
+document.addEventListener('click', function(e) {
+  const wrapper = document.querySelector('.theme-wrapper');
+  if (wrapper && !wrapper.contains(e.target)) {
+    closeThemePanel();
+  }
+});
+
+// Load saved theme on page start
+(function () {
+  const saved = localStorage.getItem('portfolio-theme') || 'dark';
+  setTheme(saved);
+})();
