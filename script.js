@@ -96,39 +96,17 @@ const ConstellationLoader = (function () {
   // Ursa Major fills the lower-left, Ursa Minor upper-right,
   // with Dubhe (UMa tip) connecting up toward Polaris (UMi tail).
 
+  // ── Cassiopeia — the famous W shape, 5 stars ──
   const STARS_DEF = [
-    // ── Ursa Major (Big Dipper) — bottom-left ──
-    // Bowl: wide rectangle, tilted slightly
-    { x: 0.05,  y: 0.85, name: 'Phad',      r: 2.6 }, // 0  bowl bottom-left
-    { x: 0.22,  y: 0.80, name: 'Merak',     r: 2.8 }, // 1  bowl bottom-right
-    { x: 0.20,  y: 0.65, name: 'Dubhe',     r: 3.0 }, // 2  bowl top-right
-    { x: 0.03,  y: 0.70, name: 'Megrez',    r: 2.2 }, // 3  bowl top-left
-    // Handle: goes up-left from top-left of bowl
-    { x: -0.08, y: 0.57, name: 'Alioth',    r: 2.5 }, // 4  handle 1st
-    { x: -0.14, y: 0.43, name: 'Mizar',     r: 2.6 }, // 5  handle 2nd (bends left)
-    { x: -0.22, y: 0.30, name: 'Alkaid',    r: 2.4 }, // 6  handle tip (far top-left)
-
-    // ── Ursa Minor (Little Dipper) — top-right, SEPARATE ──
-    // Bowl: smaller rectangle, upper-right area
-    { x: 0.42,  y: 0.22, name: 'Kochab',    r: 2.8 }, // 7  bowl bottom-left (bright)
-    { x: 0.55,  y: 0.18, name: 'Pherkad',   r: 2.4 }, // 8  bowl bottom-right
-    { x: 0.58,  y: 0.07, name: 'UMi-γ',     r: 1.8 }, // 9  bowl top-right
-    { x: 0.45,  y: 0.08, name: 'UMi-δ',     r: 1.8 }, // 10 bowl top-left
-    // Handle: goes right and slightly down from bowl
-    { x: 0.65,  y: 0.22, name: 'UMi-ε',     r: 1.6 }, // 11 handle 1st
-    { x: 0.74,  y: 0.28, name: 'UMi-ζ',     r: 1.6 }, // 12 handle 2nd
-    { x: 0.82,  y: 0.22, name: 'Polaris',   r: 3.2 }, // 13 North Star / handle tip
+    { x: 0.10, y: 0.55, name: 'Caph',      r: 2.6 }, // 0  left tip of W
+    { x: 0.28, y: 0.35, name: 'Schedar',   r: 3.2 }, // 1  first valley
+    { x: 0.50, y: 0.50, name: 'Gamma Cas', r: 3.6 }, // 2  centre peak (brightest)
+    { x: 0.72, y: 0.32, name: 'Ruchbah',   r: 2.8 }, // 3  second valley
+    { x: 0.90, y: 0.48, name: 'Segin',     r: 2.4 }, // 4  right tip of W
   ];
 
   const EDGES_DEF = [
-    // Ursa Major bowl (rectangle)
-    [0, 1], [1, 2], [2, 3], [3, 0],
-    // Ursa Major handle (up-left)
-    [3, 4], [4, 5], [5, 6],
-    // Ursa Minor bowl (rectangle) — completely separate
-    [7, 8], [8, 9], [9, 10], [10, 7],
-    // Ursa Minor handle (right)
-    [8, 11], [11, 12], [12, 13],
+    [0, 1], [1, 2], [2, 3], [3, 4],
   ];
 
   // timings (ms)
@@ -152,6 +130,45 @@ const ConstellationLoader = (function () {
   let allStarsDone = false, allEdgesDone = false;
   let holdStart = null;
   let fadingOut = false;
+  let currentPageKey = 'home';
+
+  /* ── Netflix-style text reveal ── */
+  function startNetflixText(text) {
+    if (!labelEl) return;
+    labelEl.innerHTML = '';
+    labelEl.style.opacity = '1';
+    labelEl.style.transform = 'none';
+
+    // Wrap each letter in a span
+    [...text].forEach((ch, i) => {
+      const span = document.createElement('span');
+      span.textContent = ch === ' ' ? '\u00A0' : ch;
+      span.style.cssText = `
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(18px) scale(0.8);
+        transition: opacity 0.35s ease ${i * 55}ms, transform 0.35s ease ${i * 55}ms;
+      `;
+      labelEl.appendChild(span);
+
+      // Trigger reveal on next frame
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        span.style.opacity = '1';
+        span.style.transform = 'translateY(0) scale(1)';
+      }));
+    });
+
+    // After letters appear, dissolve them out one by one (Netflix style)
+    const revealDur = text.length * 55 + 400;
+    setTimeout(() => {
+      [...labelEl.querySelectorAll('span')].forEach((span, i) => {
+        span.style.transition = `opacity 0.4s ease ${i * 40}ms, transform 0.4s ease ${i * 40}ms, filter 0.4s ease ${i * 40}ms`;
+        span.style.filter = 'blur(8px)';
+        span.style.opacity = '0';
+        span.style.transform = 'translateY(-12px) scale(1.1)';
+      });
+    }, revealDur);
+  }
 
   /* ── helpers ── */
   function accentRGB() {
@@ -180,8 +197,8 @@ const ConstellationLoader = (function () {
   }
 
   function buildScene() {
-    const scale = Math.min(W, H) * 0.80;
-    const ox = W * 0.62, oy = H * 0.50;
+    const scale = Math.min(W, H) * 0.72;
+    const ox = W * 0.50, oy = H * 0.44;
 
     stars = STARS_DEF.map(s => ({
       x: ox + (s.x - 0.3) * scale,
@@ -304,16 +321,16 @@ const ConstellationLoader = (function () {
       if (elapsed >= lastLineEnd) allEdgesDone = true;
     }
 
-    // Phase 3 — hold then fade out
+    // Phase 3 — hold then Netflix-style text + fade out
     if (allEdgesDone && !fadingOut) {
       if (!holdStart) {
         holdStart = now;
-        overlay.classList.add('cl-label-in');
+        // Trigger Netflix-style letter-by-letter reveal
+        startNetflixText(PAGE_LABELS[currentPageKey] || '');
       }
       if (now - holdStart >= HOLD_MS) {
         fadingOut = true;
         overlay.classList.add('cl-hidden');
-        // After CSS fade completes, hide the overlay fully so it doesn't block clicks
         setTimeout(() => {
           overlay.style.display = 'none';
           if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
@@ -340,12 +357,13 @@ const ConstellationLoader = (function () {
     allEdgesDone  = false;
     holdStart     = null;
     fadingOut     = false;
+    currentPageKey = pageKey;
+
+    // reset label
+    if (labelEl) { labelEl.innerHTML = ''; labelEl.style.opacity = '0'; }
 
     resize();
     buildScene();
-
-    // set label
-    if (labelEl) labelEl.textContent = PAGE_LABELS[pageKey] || pageKey;
 
     // make overlay visible
     overlay.style.display = 'flex';
