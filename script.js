@@ -381,8 +381,9 @@ showPage = function(page) {
 };
 
 // ── Play on initial page load ──
-ConstellationLoader.play('home');
-
+window.addEventListener('DOMContentLoaded', () => {
+  ConstellationLoader.play('home');
+});
 
 
 // ====== STARFIELD CANVAS ======
@@ -822,3 +823,4 @@ document.addEventListener('keydown', e => {
   refreshLoginPage();
   updateCardCounts();
 })();
+
