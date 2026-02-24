@@ -365,6 +365,8 @@ function selectPost(id) {
 }
 
 
+// ====== BLOG GRID ======
+function updateCardCounts() {
   let total = 0;
   [1, 2, 3].forEach(id => {
     const n = getComments(id).length;
