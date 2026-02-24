@@ -91,69 +91,55 @@ document.addEventListener('click', e => {
 // ====================================================
 const ConstellationLoader = (function () {
 
-  // ── Full Orion constellation (normalised 0–1 coords) ──
-  // Based on real relative positions of named Orion stars
+  // ── Ursa Major (Big Dipper) + Ursa Minor (Little Dipper) ──
+  // Normalised 0–1 coords, matching the reference image layout:
+  // Ursa Major fills the lower-left, Ursa Minor upper-right,
+  // with Dubhe (UMa tip) connecting up toward Polaris (UMi tail).
+
   const STARS_DEF = [
-    // ── Core body ──
-    { x: 0.500, y: 0.130, name: 'Meissa',     r: 2.2 }, // 0  head / λ Ori
-    { x: 0.400, y: 0.310, name: 'Betelgeuse', r: 3.4 }, // 1  left shoulder / α Ori (giant — bigger dot)
-    { x: 0.610, y: 0.285, name: 'Bellatrix',  r: 2.5 }, // 2  right shoulder / γ Ori
-    { x: 0.440, y: 0.500, name: 'Alnitak',    r: 2.2 }, // 3  belt left / ζ Ori
-    { x: 0.500, y: 0.488, name: 'Alnilam',    r: 2.2 }, // 4  belt middle / ε Ori
-    { x: 0.560, y: 0.475, name: 'Mintaka',    r: 2.0 }, // 5  belt right / δ Ori
-    { x: 0.370, y: 0.700, name: 'Rigel',      r: 3.6 }, // 6  left foot / β Ori (brightest — biggest dot)
-    { x: 0.590, y: 0.715, name: 'Saiph',      r: 2.4 }, // 7  right foot / κ Ori
+    // ── Ursa Major (Big Dipper) — 0..6 bowl, 6..10 handle ──
+    // Bowl (traced counter-clockwise from bottom-left)
+    { x: 0.100, y: 0.820, name: 'Phad',      r: 2.6 }, // 0  bowl bottom-left
+    { x: 0.175, y: 0.750, name: 'Merak',     r: 2.8 }, // 1  bowl bottom-right (pointer)
+    { x: 0.155, y: 0.640, name: 'Dubhe',     r: 3.0 }, // 2  bowl top-right (pointer / brightest)
+    { x: 0.075, y: 0.695, name: 'Megrez',    r: 2.2 }, // 3  bowl top-left / handle join
+    // Handle (from Megrez outward)
+    { x: 0.000, y: 0.610, name: 'Alioth',    r: 2.5 }, // 4  handle 1st
+    { x: -0.05, y: 0.510, name: 'Mizar',     r: 2.6 }, // 5  handle 2nd
+    { x: -0.04, y: 0.400, name: 'Alkaid',    r: 2.4 }, // 6  handle tip
 
-    // ── Sword (hangs below belt) ──
-    { x: 0.462, y: 0.560, name: 'Sword N',    r: 1.6 }, // 8  42 Ori (north sword)
-    { x: 0.455, y: 0.610, name: 'Trapezium',  r: 2.0 }, // 9  θ1 Ori / Great Nebula centre
-    { x: 0.448, y: 0.660, name: 'Sword S',    r: 1.6 }, // 10 ι Ori (south sword)
-
-    // ── Shield (π stars, right/west side) ──
-    { x: 0.730, y: 0.255, name: 'π1 Ori',     r: 1.4 }, // 11
-    { x: 0.755, y: 0.330, name: 'π2 Ori',     r: 1.4 }, // 12
-    { x: 0.765, y: 0.410, name: 'π3 Ori',     r: 1.6 }, // 13
-    { x: 0.755, y: 0.490, name: 'π4 Ori',     r: 1.4 }, // 14
-    { x: 0.730, y: 0.560, name: 'π5 Ori',     r: 1.4 }, // 15
-    { x: 0.695, y: 0.625, name: 'π6 Ori',     r: 1.4 }, // 16
-
-    // ── Raised club / left arm ──
-    { x: 0.360, y: 0.185, name: 'μ Ori',      r: 1.5 }, // 17  upper arm
-    { x: 0.285, y: 0.155, name: 'ξ Ori',      r: 1.4 }, // 18  club tip
-    { x: 0.215, y: 0.195, name: 'χ1 Ori',     r: 1.3 }, // 19  club far tip
-
-    // ── η Ori (between Bellatrix and belt) ──
-    { x: 0.585, y: 0.385, name: 'η Ori',      r: 1.4 }, // 20
+    // ── Ursa Minor (Little Dipper) — 7..13 ──
+    // Bowl
+    { x: 0.560, y: 0.170, name: 'Kochab',    r: 2.8 }, // 7  bowl outer-left (bright)
+    { x: 0.620, y: 0.220, name: 'Pherkad',   r: 2.4 }, // 8  bowl outer-right
+    { x: 0.655, y: 0.150, name: 'UMi-γ',     r: 1.8 }, // 9  bowl far-right
+    { x: 0.600, y: 0.100, name: 'UMi-δ',     r: 1.8 }, // 10 bowl top
+    // Handle
+    { x: 0.545, y: 0.120, name: 'UMi-ε',     r: 1.6 }, // 11 handle 1st
+    { x: 0.490, y: 0.160, name: 'UMi-ζ',     r: 1.6 }, // 12 handle 2nd
+    { x: 0.440, y: 0.195, name: 'Polaris',   r: 3.2 }, // 13 Polaris — North Star (handle end / tail)
   ];
 
   const EDGES_DEF = [
-    // Head & shoulders
-    [0, 1], [0, 2],
-    // Shoulder to shoulder (faint cross-brace)
-    [1, 2],
-    // Shoulders down to belt
-    [1, 3],          // Betelgeuse → Alnitak
-    [2, 20], [20, 5], // Bellatrix → η Ori → Mintaka
-    // Belt
-    [3, 4], [4, 5],
-    // Belt down to feet
-    [3, 6],          // Alnitak → Rigel
-    [5, 7],          // Mintaka → Saiph
-    // Sword
-    [3, 8], [8, 9], [9, 10],
-    // Shield arc
-    [2, 11], [11, 12], [12, 13], [13, 14], [14, 15], [15, 16],
-    // Raised arm / club
-    [1, 17], [17, 18], [18, 19],
+    // Ursa Major bowl
+    [0, 1], [1, 2], [2, 3], [3, 0],
+    // Ursa Major handle
+    [3, 4], [4, 5], [5, 6],
+    // Ursa Minor bowl
+    [7, 8], [8, 9], [9, 10], [10, 7],
+    // Ursa Minor handle
+    [7, 11], [11, 12], [12, 13],
+    // Connecting line: Dubhe (UMa) → Polaris (UMi) — the famous "pointer" line
+    [2, 13],
   ];
 
   // timings (ms)
-  const STAR_INTERVAL  = 70;   // delay between each star appearing
-  const STAR_FADE_DUR  = 280;  // how long each star fades in
-  const LINE_DELAY     = 55;   // delay between each line starting to draw
-  const LINE_DUR       = 240;  // how long each line takes to draw
-  const HOLD_MS        = 750;  // hold after everything drawn
-  const FADE_OUT_MS    = 600;  // CSS transition duration
+  const STAR_INTERVAL  = 65;
+  const STAR_FADE_DUR  = 260;
+  const LINE_DELAY     = 50;
+  const LINE_DUR       = 220;
+  const HOLD_MS        = 800;
+  const FADE_OUT_MS    = 700;
 
   const PAGE_LABELS = {
     home: 'Home', achievements: 'Achievements', skills: 'Skills & Tools',
@@ -167,6 +153,7 @@ const ConstellationLoader = (function () {
   let sequenceStart = null;
   let allStarsDone = false, allEdgesDone = false;
   let holdStart = null;
+  let fadingOut = false;
 
   /* ── helpers ── */
   function accentRGB() {
@@ -195,13 +182,15 @@ const ConstellationLoader = (function () {
   }
 
   function buildScene() {
-    const scale = Math.min(W, H) * 0.62;
-    const ox = W * 0.5, oy = H * 0.46;
+    // Scale so both dippers fill nicely
+    const scale = Math.min(W, H) * 0.82;
+    // Shift origin so the left handle doesn't clip
+    const ox = W * 0.54, oy = H * 0.50;
 
     stars = STARS_DEF.map(s => ({
-      x: ox + (s.x - 0.5) * scale,
+      x: ox + (s.x - 0.3) * scale,
       y: oy + (s.y - 0.5) * scale,
-      r: (s.r || 2) * Math.min(W, H) / 700, // scale radius with screen
+      r: (s.r || 2) * Math.min(W, H) / 700,
       alpha: 0,
       born: null,
     }));
@@ -212,14 +201,14 @@ const ConstellationLoader = (function () {
       born: null,
     }));
 
-    // scattered background micro-stars — more of them for atmosphere
-    bgStars = Array.from({ length: 200 }, () => ({
+    // Lots of small background stars for atmosphere
+    bgStars = Array.from({ length: 320 }, () => ({
       x: Math.random() * W,
       y: Math.random() * H,
-      r: Math.random() * 0.9 + 0.15,
+      r: Math.random() * 1.0 + 0.1,
       base: Math.random() * 0.22 + 0.04,
       phase: Math.random() * Math.PI * 2,
-      speed: Math.random() * 1.2 + 0.4,
+      speed: Math.random() * 1.3 + 0.3,
     }));
   }
 
@@ -230,7 +219,7 @@ const ConstellationLoader = (function () {
 
     // background twinkle stars
     for (const s of bgStars) {
-      const a = s.base + 0.12 * Math.sin(now * 0.001 * s.speed + s.phase);
+      const a = s.base + 0.10 * Math.sin(now * 0.001 * s.speed + s.phase);
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
@@ -250,13 +239,13 @@ const ConstellationLoader = (function () {
       const g2 = ctx.createLinearGradient(sa.x, sa.y, ex, ey);
       const la = 0.5 * Math.min(sa.alpha, sb.alpha);
       g2.addColorStop(0,   `rgba(${r},${g},${b},${la})`);
-      g2.addColorStop(0.5, `rgba(${r},${g},${b},${la * 1.5})`);
+      g2.addColorStop(0.5, `rgba(${r},${g},${b},${la * 1.6})`);
       g2.addColorStop(1,   `rgba(${r},${g},${b},${la})`);
       ctx.beginPath();
       ctx.moveTo(sa.x, sa.y);
       ctx.lineTo(ex, ey);
       ctx.strokeStyle = g2;
-      ctx.lineWidth = 1.1;
+      ctx.lineWidth = 1.2;
       ctx.stroke();
     }
 
@@ -267,10 +256,10 @@ const ConstellationLoader = (function () {
       s.alpha = easeOut(t);
       if (s.alpha <= 0) continue;
 
-      // glow halo — scales with star size
+      // glow halo
       const glowRadius = s.r * 5.5;
       const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, glowRadius);
-      grd.addColorStop(0, `rgba(${r},${g},${b},${s.alpha * 0.4})`);
+      grd.addColorStop(0, `rgba(${r},${g},${b},${s.alpha * 0.45})`);
       grd.addColorStop(1, `rgba(${r},${g},${b},0)`);
       ctx.beginPath();
       ctx.arc(s.x, s.y, glowRadius, 0, Math.PI * 2);
@@ -309,9 +298,9 @@ const ConstellationLoader = (function () {
       if (elapsed >= (stars.length - 1) * STAR_INTERVAL) allStarsDone = true;
     }
 
-    // Phase 2 — draw lines (starts after last star is born)
+    // Phase 2 — draw lines
     if (allStarsDone && !allEdgesDone) {
-      const linesBase = (stars.length - 1) * STAR_INTERVAL + 120;
+      const linesBase = (stars.length - 1) * STAR_INTERVAL + 100;
       edges.forEach((e, i) => {
         if (!e.born && elapsed >= linesBase + i * LINE_DELAY) e.born = now;
       });
@@ -320,35 +309,41 @@ const ConstellationLoader = (function () {
     }
 
     // Phase 3 — hold then fade out
-    if (allEdgesDone) {
+    if (allEdgesDone && !fadingOut) {
       if (!holdStart) {
         holdStart = now;
-        // show label now
         overlay.classList.add('cl-label-in');
       }
       if (now - holdStart >= HOLD_MS) {
-        // trigger CSS fade-out
+        fadingOut = true;
         overlay.classList.add('cl-hidden');
-        cancelAnimationFrame(rafId);
-        rafId = null;
-        return;
+        // After CSS fade completes, hide the overlay fully so it doesn't block clicks
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        }, FADE_OUT_MS + 50);
       }
     }
 
     drawFrame(now);
-    rafId = requestAnimationFrame(tick);
+    if (!fadingOut || (holdStart && now - holdStart < HOLD_MS + FADE_OUT_MS)) {
+      rafId = requestAnimationFrame(tick);
+    }
   }
 
   /* ── public: play the loader ── */
   function play(pageKey) {
     if (!overlay && !setup()) return;
 
-    // reset state
+    // cancel any running animation
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+
+    // reset state
     sequenceStart = null;
     allStarsDone  = false;
     allEdgesDone  = false;
     holdStart     = null;
+    fadingOut     = false;
 
     resize();
     buildScene();
@@ -356,10 +351,11 @@ const ConstellationLoader = (function () {
     // set label
     if (labelEl) labelEl.textContent = PAGE_LABELS[pageKey] || pageKey;
 
-    // make overlay visible instantly
+    // make overlay visible
+    overlay.style.display = 'flex';
     overlay.classList.remove('cl-hidden', 'cl-label-in');
 
-    // force reflow so transition resets properly
+    // force reflow so CSS transitions reset properly
     void overlay.offsetWidth;
 
     rafId = requestAnimationFrame(tick);
@@ -376,7 +372,7 @@ const ConstellationLoader = (function () {
 const _origShowPage = showPage;
 showPage = function(page) {
   ConstellationLoader.play(page);
-  // small delay so overlay is visible before page switches
+  // small delay so overlay is visible before page content switches
   setTimeout(() => _origShowPage(page), 80);
 };
 
@@ -390,7 +386,7 @@ window.addEventListener('DOMContentLoaded', () => {
 const starfieldInstances = {};
 
 function startStarfield(canvasId) {
-  if (starfieldInstances[canvasId]) return; // already running
+  if (starfieldInstances[canvasId]) return;
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -424,7 +420,6 @@ function startStarfield(canvasId) {
       ctx.fillStyle = `rgba(232, 213, 163, ${s.alpha * 0.9})`;
       ctx.fill();
     }
-    // Draw a few connecting lines for constellation effect
     for (let i = 0; i < stars.length; i += 12) {
       const a = stars[i], b = stars[(i + 7) % stars.length];
       const dist = Math.hypot(a.x - b.x, a.y - b.y);
@@ -599,9 +594,8 @@ const POSTS = {
   }
 };
 
-// ====== NEWSPAPER: SELECT STORY (index switching) ======
+// ====== NEWSPAPER: SELECT STORY ======
 function selectPost(id) {
-  // Update active index item
   document.querySelectorAll('.np-index-list li').forEach((li, i) => {
     li.classList.toggle('active', i + 1 === id);
   });
@@ -660,7 +654,6 @@ function selectPost(id) {
     `;
   }
 
-  // Show/hide the below-grid row
   const belowRule = document.querySelector('.np-below-rule');
   const belowGrid = document.getElementById('np-below-grid');
   if (belowRule) belowRule.style.display = p.belowVisible ? '' : 'none';
@@ -721,7 +714,6 @@ function closePost() {
 }
 
 function closePostOverlay(e) {
-  // Only close if clicking directly on the dark overlay, not the panel
   if (e.target === document.getElementById('blog-modal-overlay')) {
     closePost();
   }
@@ -823,4 +815,3 @@ document.addEventListener('keydown', e => {
   refreshLoginPage();
   updateCardCounts();
 })();
-
