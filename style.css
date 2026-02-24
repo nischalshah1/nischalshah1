@@ -103,6 +103,22 @@ nav a:hover, nav a.active { color: var(--accent); }
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
   align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+#constellation-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#page-home {
+  position: relative;
+  overflow: hidden;
 }
 
 .hero-title {
