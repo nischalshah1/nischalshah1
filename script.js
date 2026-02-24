@@ -96,13 +96,13 @@ const ConstellationLoader = (function () {
   // Ursa Major fills the lower-left, Ursa Minor upper-right,
   // with Dubhe (UMa tip) connecting up toward Polaris (UMi tail).
 
-  // ── Cassiopeia — the famous W shape, 5 stars ──
+  // ── Cassiopeia — proper W shape ──
   const STARS_DEF = [
-    { x: 0.10, y: 0.55, name: 'Caph',      r: 2.6 }, // 0  left tip of W
-    { x: 0.28, y: 0.35, name: 'Schedar',   r: 3.2 }, // 1  first valley
-    { x: 0.50, y: 0.50, name: 'Gamma Cas', r: 3.6 }, // 2  centre peak (brightest)
-    { x: 0.72, y: 0.32, name: 'Ruchbah',   r: 2.8 }, // 3  second valley
-    { x: 0.90, y: 0.48, name: 'Segin',     r: 2.4 }, // 4  right tip of W
+    { x: 0.10, y: 0.60, name: 'Caph',      r: 2.6 }, // 0  far left
+    { x: 0.30, y: 0.35, name: 'Schedar',   r: 3.2 }, // 1  up
+    { x: 0.50, y: 0.55, name: 'Gamma Cas', r: 3.8 }, // 2  down (centre)
+    { x: 0.70, y: 0.30, name: 'Ruchbah',   r: 2.8 }, // 3  up
+    { x: 0.90, y: 0.55, name: 'Segin',     r: 2.4 }, // 4  far right
   ];
 
   const EDGES_DEF = [
@@ -110,12 +110,12 @@ const ConstellationLoader = (function () {
   ];
 
   // timings (ms)
-  const STAR_INTERVAL  = 65;
-  const STAR_FADE_DUR  = 260;
-  const LINE_DELAY     = 50;
-  const LINE_DUR       = 220;
-  const HOLD_MS        = 800;
-  const FADE_OUT_MS    = 700;
+  const STAR_INTERVAL  = 120;
+  const STAR_FADE_DUR  = 300;
+  const LINE_DELAY     = 80;
+  const LINE_DUR       = 300;
+  const HOLD_MS        = 1800;
+  const FADE_OUT_MS    = 900;
 
   const PAGE_LABELS = {
     home: 'Home', achievements: 'Achievements', skills: 'Skills & Tools',
@@ -138,36 +138,38 @@ const ConstellationLoader = (function () {
     labelEl.innerHTML = '';
     labelEl.style.opacity = '1';
     labelEl.style.transform = 'none';
+    labelEl.style.perspective = '800px';
 
-    // Wrap each letter in a span
-    [...text].forEach((ch, i) => {
+    // Split into letters
+    const letters = [...text];
+    letters.forEach((ch, i) => {
       const span = document.createElement('span');
       span.textContent = ch === ' ' ? '\u00A0' : ch;
       span.style.cssText = `
         display: inline-block;
         opacity: 0;
-        transform: translateY(18px) scale(0.8);
-        transition: opacity 0.35s ease ${i * 55}ms, transform 0.35s ease ${i * 55}ms;
+        transform: scale(4) translateZ(120px);
+        filter: blur(12px) brightness(3);
+        text-shadow: 0 0 40px var(--accent), 0 0 80px var(--accent);
+        transition:
+          opacity 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 80}ms,
+          transform 0.7s cubic-bezier(0.16,1,0.3,1) ${i * 80}ms,
+          filter 0.6s ease ${i * 80}ms,
+          text-shadow 0.6s ease ${i * 80}ms;
       `;
       labelEl.appendChild(span);
 
-      // Trigger reveal on next frame
+      // Trigger zoom-in on next frame
       requestAnimationFrame(() => requestAnimationFrame(() => {
         span.style.opacity = '1';
-        span.style.transform = 'translateY(0) scale(1)';
+        span.style.transform = 'scale(1) translateZ(0)';
+        span.style.filter = 'blur(0) brightness(1.4)';
+        span.style.textShadow = '0 0 20px var(--accent), 0 0 40px var(--accent)';
       }));
     });
 
-    // After letters appear, dissolve them out one by one (Netflix style)
-    const revealDur = text.length * 55 + 400;
-    setTimeout(() => {
-      [...labelEl.querySelectorAll('span')].forEach((span, i) => {
-        span.style.transition = `opacity 0.4s ease ${i * 40}ms, transform 0.4s ease ${i * 40}ms, filter 0.4s ease ${i * 40}ms`;
-        span.style.filter = 'blur(8px)';
-        span.style.opacity = '0';
-        span.style.transform = 'translateY(-12px) scale(1.1)';
-      });
-    }, revealDur);
+    // After fully revealed, fade out the whole label with the overlay
+    // (no need for separate dissolve — overlay itself fades)
   }
 
   /* ── helpers ── */
