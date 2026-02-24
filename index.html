@@ -43,6 +43,7 @@
 
 <!-- ====== HOME ====== -->
 <div id="page-home" class="page active">
+  <canvas id="constellation-canvas"></canvas>
   <div class="hero">
     <div>
       <div class="hero-tag">Lava Zander</div>
@@ -73,13 +74,12 @@
   <section>
     <div class="section-label">02 — Achievements</div>
     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;">
-      <h2 class="section-title" style="margin-bottom:0;">Honors&<br><em style="font-style:italic;color:var(--accent2);">Awards</em></h2>
+      <h2 class="section-title" style="margin-bottom:0;">Selected<br><em style="font-style:italic;color:var(--accent2);">Achievements</em></h2>
     </div>
     <div class="cards-grid">
       <div class="card"><div class="card-year">2022</div><div class="card-title">Grade 9</div><div class="card-desc"><ul><li>Qualified for IJSO 22', Colombia</li><li>Completed Asteroid search training and campaign</li><li>Public Relation officer at ICDPS</li></ul></div><div class="card-tags"><span class="tag">Problem Solving</span><span class="tag">Project planning</span></div></div>
       <div class="card"><div class="card-year">2023</div><div class="card-title">Grade 10</div><div class="card-desc"><ul><li>President for ICDPS</li><li>Honourable Mentions in The transnational invitational Meet 3</li><li>Best Community Service Project Award</li></ul></div><div class="card-tags"><span class="tag">Public Speaking</span><span class="tag">Leadership</span></div></div>
       <div class="card"><div class="card-year">2024</div><div class="card-title">Grade 11</div><div class="card-desc"><ul><li>NAO camp; NYPT Finalist 25'</li><li>Waitlisted in YYGS</li><li>Nepal Chapter Representative at Seds-Trinity</li></ul></div><div class="card-tags"><span class="tag">Problem Solving</span><span class="tag">Project planning</span></div></div>
-       <div class="card"><div class="card-year">2025</div><div class="card-title">Grade 12</div><div class="card-desc"><ul><li>Physics Brawl, Top 50th in category A</li><li>Vice President at Seds-Trinity</li><li>Graphic Designer at Seds-Nepal</li></ul></div><div class="card-tags"><span class="tag">Leadership</span><span class="tag">Project planning</span></div></div>
     </div>
   </section>
 </div>
@@ -92,11 +92,9 @@
       <h2 class="section-title" style="margin-bottom:0;">Skills &amp;<br><em style="font-style:italic;color:var(--accent2);">Tools</em></h2>
     </div>
     <div class="skills-grid">
-      <div class="skill-item"><div class="skill-name">Astronomy</div><div class="skill-level-bar"><div class="skill-level-fill" style="width:100%"></div></div><div class="skill-level-text">Science · 100%</div></div>
-      <div class="skill-item"><div class="skill-name">Chemistry</div><div class="skill-level-bar"><div class="skill-level-fill" style="width:100%"></div></div><div class="skill-level-text">Science · 100%</div></div>
-      <div class="skill-item"><div class="skill-name">Web Development</div><div class="skill-level-bar"><div class="skill-level-fill" style="width:100%"></div></div><div class="skill-level-text">Language · 100%</div></div>
-      <div class="skill-item"><div class="skill-name">Graphic Designing</div><div class="skill-level-bar"><div class="skill-level-fill" style="width:100%"></div></div><div class="skill-level-text">Science · 100%</div></div>
-      <div class="skill-item"><div class="skill-name">Leadership</div><div class="skill-level-bar"><div class="skill-level-fill" style="width:100%"></div></div><div class="skill-level-text">Science · 100%</div></div>
+      <div class="skill-item"><div class="skill-name">Astronomy</div><div class="skill-level-bar"><div class="skill-level-fill" style="width:30%"></div></div><div class="skill-level-text">Science · 40%</div></div>
+      <div class="skill-item"><div class="skill-name">Chemistry</div><div class="skill-level-bar"><div class="skill-level-fill" style="width:67%"></div></div><div class="skill-level-text">Science · 67%</div></div>
+      <div class="skill-item"><div class="skill-name">HTML</div><div class="skill-level-bar"><div class="skill-level-fill" style="width:70%"></div></div><div class="skill-level-text">Language · 70%</div></div>
     </div>
   </section>
 </div>
@@ -134,7 +132,7 @@
     <div class="contact-form-wrapper">
       <div class="contact-form-header">
         <div class="section-label" style="margin-bottom:0.5rem;">Send a Message</div>
-        <p class="contact-form-sub">Note: Currently contact section is disabled <br>Fill in the form below and I'll get back to you.</p>
+        <p class="contact-form-sub">Fill in the form below and I'll get back to you.</p>
       </div>
       <form class="contact-form" id="contact-form" onsubmit="submitContactForm(event)">
         <div class="cf-row">
@@ -173,6 +171,7 @@
           "The universe is under no obligation to make sense to you."
         </blockquote>
         <div class="auth-left-attr">— Neil deGrasse Tyson</div>
+        <div class="auth-left-badge">🔭 Dharan, Nepal</div>
       </div>
     </div>
 
@@ -327,14 +326,14 @@
       <div class="np-col np-col-lead">
         <div class="np-story np-story-lead" data-post="1" onclick="openPost(1)">
           <div class="np-story-kicker">Lead Story · Astronomy</div>
-          <h2 class="np-story-headline np-headline-lead">Why I Fell in Love with the Stars</h2>
+          <h2 class="np-story-headline np-headline-lead">Why I Fell in<br>Love with<br>the Stars</h2>
           <div class="np-story-rule"></div>
           <p class="np-story-body np-dropcap">Ever since I was a child in Dharan, I would lie on the roof and stare up at the Milky Way stretching across the sky. Nepal's clear mountain air gives you something most city-dwellers never experience — a genuinely dark sky. That's where it started. The moment I realized those faint smudges weren't just stars but entire galaxies billions of light-years away, something clicked entirely.</p>
           <p class="np-story-body">Physics stopped being equations and became a language the universe was speaking directly to me. Qualifying for IJSO opened my eyes to how competitive and beautiful the world of science olympiads truly is.</p>
           <div class="np-story-footer">
             <span class="np-story-date">Jan 12, 2025</span>
             <span class="np-story-read">Continue Reading →</span>
-            <span class="np-story-comments" id="card-count-1">0 comments </span>
+            <span class="np-story-comments" id="card-count-1">0 comments</span>
           </div>
         </div>
 
