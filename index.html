@@ -21,20 +21,21 @@
     <a onclick="showPage('about')">About</a>
     <a onclick="showPage('contact')">Contact</a>
   </nav>
-  <!-- THEME SWITCHER -->
+
+  <!-- THEME SWITCHER — round circle button -->
   <div class="theme-wrapper">
     <button class="theme-toggle-btn" onclick="toggleThemePanel()" title="Change Theme">
       <span id="theme-icon">🌙</span>
     </button>
     <div class="theme-panel" id="theme-panel">
-      <div class="theme-panel-title">Choose Theme</div>
+      <div class="theme-panel-title">Switch Theme</div>
       <div class="theme-options">
-        <button class="theme-opt" data-theme="dark"   onclick="setTheme('dark')">  <span class="theme-dot" style="background:#0a0a0a;border:1px solid #e8d5a3;"></span> Dark   </button>
-        <button class="theme-opt" data-theme="light"  onclick="setTheme('light')"> <span class="theme-dot" style="background:#f5f0e8;border:1px solid #8b6914;"></span> Light  </button>
-        <button class="theme-opt" data-theme="retro"  onclick="setTheme('retro')"> <span class="theme-dot" style="background:#1a0a00;border:1px solid #ff6b00;"></span> Retro  </button>
-        <button class="theme-opt" data-theme="love"   onclick="setTheme('love')">  <span class="theme-dot" style="background:#1a0010;border:1px solid #ff4d8f;"></span> Love   </button>
-        <button class="theme-opt" data-theme="ocean"  onclick="setTheme('ocean')"> <span class="theme-dot" style="background:#020d1a;border:1px solid #00c8ff;"></span> Ocean  </button>
-        <button class="theme-opt" data-theme="forest" onclick="setTheme('forest')"><span class="theme-dot" style="background:#061a08;border:1px solid #4caf50;"></span> Forest </button>
+        <button class="theme-opt" data-theme="dark"   onclick="setTheme('dark')">  <span class="theme-swatch" style="background:#0a0a0a;border:2px solid #e8d5a3;"></span><span class="theme-opt-icon">🌙</span> Dark   </button>
+        <button class="theme-opt" data-theme="light"  onclick="setTheme('light')"> <span class="theme-swatch" style="background:#f5f0e8;border:2px solid #8b6914;"></span><span class="theme-opt-icon">☀️</span> Light  </button>
+        <button class="theme-opt" data-theme="retro"  onclick="setTheme('retro')"> <span class="theme-swatch" style="background:#1a0a00;border:2px solid #ff6b00;"></span><span class="theme-opt-icon">📺</span> Retro  </button>
+        <button class="theme-opt" data-theme="love"   onclick="setTheme('love')">  <span class="theme-swatch" style="background:#1a0010;border:2px solid #ff4d8f;"></span><span class="theme-opt-icon">💗</span> Love   </button>
+        <button class="theme-opt" data-theme="ocean"  onclick="setTheme('ocean')"> <span class="theme-swatch" style="background:#020d1a;border:2px solid #00c8ff;"></span><span class="theme-opt-icon">🌊</span> Ocean  </button>
+        <button class="theme-opt" data-theme="forest" onclick="setTheme('forest')"><span class="theme-swatch" style="background:#061a08;border:2px solid #4caf50;"></span><span class="theme-opt-icon">🌿</span> Forest </button>
       </div>
     </div>
   </div>
@@ -52,13 +53,13 @@
       <p class="hero-subtitle" style="margin-top:1rem;">
         A place for me to share express my self.
       </p>
-      <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;">
+      <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;align-items:center;">
         <button class="btn btn-accent" onclick="showPage('achievements')">View Achievements</button>
         <div class="social-icons">
-          <a href="mailto:college.nischal@gmail.com"><i class="fas fa-envelope"></i></a>
-          <a href="https://github.com/nischalshah1"><i class="fab fa-github"></i></a>
-          <a href="https://linkedin.com/in/nischal-shah-59a798250/"><i class="fab fa-linkedin-in"></i></a>
-          <a href="https://instagram.com/unstablenebula/"><i class="fab fa-instagram"></i></a>
+          <a href="mailto:college.nischal@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+          <a href="https://github.com/nischalshah1" title="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://linkedin.com/in/nischal-shah-59a798250/" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://instagram.com/unstablenebula/" title="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
       </div>
     </div>
@@ -99,7 +100,7 @@
         <div class="card-title">Grade 10</div>
         <div class="card-desc">
           <ul>
-            <li>President for ICDPS.</li>
+            <li>President for ICDPS</li>
             <li>Honourable Mentions in The transnational invitational Meet 3</li>
             <li>Best Community Service Project Award</li>
           </ul>
@@ -115,7 +116,7 @@
         <div class="card-desc">
           <ul>
             <li>NAO camp; NYPT Finalist 25'</li>
-            <li>Waitlisted in YYGS.</li>
+            <li>Waitlisted in YYGS</li>
             <li>Nepal Chapter Representative at Seds-Trinity</li>
           </ul>
         </div>
@@ -138,23 +139,17 @@
     <div class="skills-grid">
       <div class="skill-item">
         <div class="skill-name">Astronomy</div>
-        <div class="skill-level-bar">
-          <div class="skill-level-fill" style="width:30%"></div>
-        </div>
+        <div class="skill-level-bar"><div class="skill-level-fill" style="width:30%"></div></div>
         <div class="skill-level-text">Science · 40%</div>
       </div>
       <div class="skill-item">
         <div class="skill-name">Chemistry</div>
-        <div class="skill-level-bar">
-          <div class="skill-level-fill" style="width:67%"></div>
-        </div>
+        <div class="skill-level-bar"><div class="skill-level-fill" style="width:67%"></div></div>
         <div class="skill-level-text">Science · 67%</div>
       </div>
       <div class="skill-item">
         <div class="skill-name">HTML</div>
-        <div class="skill-level-bar">
-          <div class="skill-level-fill" style="width:90%"></div>
-        </div>
+        <div class="skill-level-bar"><div class="skill-level-fill" style="width:70%"></div></div>
         <div class="skill-level-text">Language · 70%</div>
       </div>
     </div>
@@ -173,26 +168,11 @@
         </div>
       </div>
       <div class="about-details">
-        <div class="detail-row">
-          <span class="detail-label">Full Name</span>
-          <span class="detail-value">Nischal Shah</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Grade</span>
-          <span class="detail-value">Class 12 Science</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Location</span>
-          <span class="detail-value">Dharan, Nepal</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Email</span>
-          <span class="detail-value">college.nischal@gmail.com</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Education</span>
-          <span class="detail-value">Delhi Public School, Dharan<br>Trinity International College, Kathmandu</span>
-        </div>
+        <div class="detail-row"><span class="detail-label">Full Name</span><span class="detail-value">Nischal Shah</span></div>
+        <div class="detail-row"><span class="detail-label">Grade</span><span class="detail-value">Class 12 Science</span></div>
+        <div class="detail-row"><span class="detail-label">Location</span><span class="detail-value">Dharan, Nepal</span></div>
+        <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">college.nischal@gmail.com</span></div>
+        <div class="detail-row"><span class="detail-label">Education</span><span class="detail-value">Delhi Public School, Dharan<br>Trinity International College, Kathmandu</span></div>
       </div>
     </div>
   </section>
@@ -203,7 +183,6 @@
   <section>
     <div class="section-label">05 — Connect</div>
     <h2 class="section-title">Get In<br><em style="font-style:italic;color:var(--accent2);">Touch</em></h2>
-
     <div class="contact-grid">
       <div class="contact-card">
         <div class="contact-type">Email</div>
@@ -218,7 +197,6 @@
         <div class="contact-value"><a href="https://www.instagram.com/unstablenebula/">instagram.com/unstablenebula</a></div>
       </div>
     </div>
-
     <div class="contact-form-wrapper">
       <div class="contact-form-header">
         <div class="section-label" style="margin-bottom:0.5rem;">Send a Message</div>
