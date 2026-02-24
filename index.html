@@ -267,56 +267,117 @@
 
 <!-- ====== BLOG ====== -->
 <div id="page-blog" class="page">
-  <section>
-    <div class="section-label">07 — Thoughts</div>
-    <h2 class="section-title">My<br><em style="font-style:italic;color:var(--accent2);">Blog</em></h2>
+  <div class="newspaper">
 
-    <div class="blog-grid">
-
-      <div class="blog-card" onclick="openPost(1)">
-        <div class="blog-card-num">01</div>
-        <div class="blog-card-top">
-          <span class="blog-card-tag">Astronomy</span>
-          <span class="blog-card-date">Jan 12, 2025</span>
-        </div>
-        <h3 class="blog-card-title">Why I Fell in Love with the Stars</h3>
-        <p class="blog-card-excerpt">Ever since I was a child in Dharan, I would lie on the roof and stare up at the Milky Way. Nepal's clear mountain air gives you something most city-dwellers never experience — a genuinely dark sky.</p>
-        <div class="blog-card-footer">
-          <span class="blog-card-read">Read →</span>
-          <span class="blog-card-comments" id="card-count-1">0 comments</span>
-        </div>
+    <!-- MASTHEAD -->
+    <div class="np-masthead">
+      <div class="np-masthead-top">
+        <span class="np-vol">Vol. I &nbsp;·&nbsp; Issue 3</span>
+        <h1 class="np-title">The Nischal<em>Times</em></h1>
+        <span class="np-dateline" id="np-dateline">Dharan · Kathmandu</span>
       </div>
-
-      <div class="blog-card" onclick="openPost(2)">
-        <div class="blog-card-num">02</div>
-        <div class="blog-card-top">
-          <span class="blog-card-tag">Reflection</span>
-          <span class="blog-card-date">Feb 3, 2025</span>
-        </div>
-        <h3 class="blog-card-title">What NYPT Taught Me About Arguing</h3>
-        <p class="blog-card-excerpt">The Nepal Young Physicists' Tournament is unlike any science competition I'd been in. You don't just solve problems — you defend solutions in front of opponents who actively try to dismantle your reasoning.</p>
-        <div class="blog-card-footer">
-          <span class="blog-card-read">Read →</span>
-          <span class="blog-card-comments" id="card-count-2">0 comments</span>
-        </div>
+      <div class="np-masthead-rule"></div>
+      <div class="np-masthead-strip">
+        <span>Science &amp; Reflection</span>
+        <span class="np-strip-dot">✦</span>
+        <span>Astronomy · Physics · Life</span>
+        <span class="np-strip-dot">✦</span>
+        <span>Est. 2025 — Personal Edition</span>
       </div>
-
-      <div class="blog-card blog-card-wide" onclick="openPost(3)">
-        <div class="blog-card-num">03</div>
-        <div class="blog-card-top">
-          <span class="blog-card-tag">Life</span>
-          <span class="blog-card-date">Feb 20, 2025</span>
-        </div>
-        <h3 class="blog-card-title">Moving to Kathmandu: A Culture Shock</h3>
-        <p class="blog-card-excerpt">Leaving Dharan for Trinity International College in Kathmandu felt like jumping from a quiet lake into an ocean. The pace is different, the people are different, and the expectations are different. For the first few weeks I missed the familiar mountains.</p>
-        <div class="blog-card-footer">
-          <span class="blog-card-read">Read →</span>
-          <span class="blog-card-comments" id="card-count-3">0 comments</span>
-        </div>
-      </div>
-
+      <div class="np-masthead-rule"></div>
     </div>
-  </section>
+
+    <!-- BROADSHEET BODY -->
+    <div class="np-body">
+
+      <!-- LEFT COLUMN: index / latest ticker -->
+      <div class="np-col np-col-index">
+        <div class="np-index-label">In This Edition</div>
+        <ol class="np-index-list">
+          <li onclick="openPost(1)">
+            <span class="np-idx-n">I.</span>
+            <span class="np-idx-title">Why I Fell in Love with the Stars</span>
+          </li>
+          <li onclick="openPost(2)">
+            <span class="np-idx-n">II.</span>
+            <span class="np-idx-title">What NYPT Taught Me About Arguing</span>
+          </li>
+          <li onclick="openPost(3)">
+            <span class="np-idx-n">III.</span>
+            <span class="np-idx-title">Moving to Kathmandu: A Culture Shock</span>
+          </li>
+        </ol>
+        <div class="np-index-divider"></div>
+        <div class="np-index-note">
+          "Science is the poetry of reality."<br>
+          <em>— Richard Dawkins</em>
+        </div>
+        <div class="np-index-divider"></div>
+        <div class="np-comment-ticker">
+          <div class="np-ticker-label">Reader Comments</div>
+          <div class="np-ticker-count" id="ticker-total">Loading…</div>
+        </div>
+      </div>
+
+      <div class="np-col-rule"></div>
+
+      <!-- CENTER COLUMN: lead story -->
+      <div class="np-col np-col-lead">
+        <div class="np-story np-story-lead" onclick="openPost(1)">
+          <div class="np-story-kicker">Lead Story · Astronomy</div>
+          <h2 class="np-story-headline np-headline-lead">Why I Fell in<br>Love with<br>the Stars</h2>
+          <div class="np-story-rule"></div>
+          <p class="np-story-body np-dropcap">Ever since I was a child in Dharan, I would lie on the roof and stare up at the Milky Way stretching across the sky. Nepal's clear mountain air gives you something most city-dwellers never experience — a genuinely dark sky. That's where it started. The moment I realized those faint smudges weren't just stars but entire galaxies billions of light-years away, something clicked entirely.</p>
+          <p class="np-story-body">Physics stopped being equations and became a language the universe was speaking directly to me. Qualifying for IJSO opened my eyes to how competitive and beautiful the world of science olympiads truly is.</p>
+          <div class="np-story-footer">
+            <span class="np-story-date">Jan 12, 2025</span>
+            <span class="np-story-read">Continue Reading →</span>
+            <span class="np-story-comments" id="card-count-1">0 comments</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="np-col-rule"></div>
+
+      <!-- RIGHT COLUMN: two smaller stories -->
+      <div class="np-col np-col-side">
+
+        <div class="np-story np-story-small" onclick="openPost(2)">
+          <div class="np-story-kicker">Reflection · Physics</div>
+          <h3 class="np-story-headline np-headline-small">What NYPT Taught Me About Arguing</h3>
+          <div class="np-story-rule"></div>
+          <p class="np-story-body">The Nepal Young Physicists' Tournament is unlike any science competition I'd been in. You don't just solve problems — you defend solutions in front of opponents who actively try to dismantle your reasoning. It's brutal and brilliant in equal measure.</p>
+          <div class="np-story-footer">
+            <span class="np-story-date">Feb 3, 2025</span>
+            <span class="np-story-read">Read →</span>
+            <span class="np-story-comments" id="card-count-2">0 comments</span>
+          </div>
+        </div>
+
+        <div class="np-side-rule"></div>
+
+        <div class="np-story np-story-small" onclick="openPost(3)">
+          <div class="np-story-kicker">Life · Kathmandu</div>
+          <h3 class="np-story-headline np-headline-small">Moving to Kathmandu: A Culture Shock</h3>
+          <div class="np-story-rule"></div>
+          <p class="np-story-body">Leaving Dharan for Trinity International College in Kathmandu felt like jumping from a quiet lake into an ocean. The pace is different, the people are different, and the expectations are entirely different. For the first few weeks I missed the mountains.</p>
+          <div class="np-story-footer">
+            <span class="np-story-date">Feb 20, 2025</span>
+            <span class="np-story-read">Read →</span>
+            <span class="np-story-comments" id="card-count-3">0 comments</span>
+          </div>
+        </div>
+
+      </div><!-- /np-col-side -->
+
+    </div><!-- /np-body -->
+
+    <!-- FOOTER RULE -->
+    <div class="np-footer-rule">
+      <span>— End of Edition —</span>
+    </div>
+
+  </div><!-- /newspaper -->
 </div>
 
 <!-- ====== BLOG POST SLIDE-IN MODAL ====== -->
