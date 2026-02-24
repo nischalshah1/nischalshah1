@@ -20,9 +20,11 @@
     <a onclick="showPage('skills')">Skills</a>
     <a onclick="showPage('about')">About</a>
     <a onclick="showPage('contact')">Contact</a>
+    <a onclick="showPage('blog')">Blog</a>
+    <a onclick="showPage('login')" id="nav-login-btn">Login</a>
   </nav>
 
-  <!-- THEME SWITCHER — round circle button -->
+  <!-- THEME SWITCHER -->
   <div class="theme-wrapper">
     <button class="theme-toggle-btn" onclick="toggleThemePanel()" title="Change Theme">
       <span id="theme-icon">🌙</span>
@@ -232,6 +234,170 @@
         <div class="cf-success-sub">Thank you for reaching out. I'll reply soon.</div>
         <button class="btn btn-muted" style="margin-top:1.5rem;" onclick="resetContactForm()">Send Another</button>
       </div>
+    </div>
+  </section>
+</div>
+
+<!-- ====== LOGIN ====== -->
+<div id="page-login" class="page">
+  <section>
+    <div class="section-label">06 — Account</div>
+
+    <!-- Logged-out state -->
+    <div id="auth-panel">
+      <h2 class="section-title">Welcome<br><em style="font-style:italic;color:var(--accent2);">Back</em></h2>
+
+      <!-- Tab switcher -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="auth-login-form" class="auth-form-wrapper">
+        <form class="auth-form" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input class="form-input" id="login-username" type="text" placeholder="your_username" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" id="login-password" type="password" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <div id="login-error" class="auth-error" style="display:none;"></div>
+          <button class="btn btn-accent auth-submit-btn" type="submit">Login →</button>
+          <p class="auth-switch-text">No account? <span onclick="switchAuthTab('register')">Register here</span></p>
+        </form>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="auth-register-form" class="auth-form-wrapper" style="display:none;">
+        <form class="auth-form" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label class="form-label">Choose a Username</label>
+            <input class="form-input" id="reg-username" type="text" placeholder="your_username" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="reg-email" type="email" placeholder="email@example.com" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" id="reg-password" type="password" placeholder="••••••••" required autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input class="form-input" id="reg-confirm" type="password" placeholder="••••••••" required autocomplete="new-password">
+          </div>
+          <div id="reg-error" class="auth-error" style="display:none;"></div>
+          <button class="btn btn-accent auth-submit-btn" type="submit">Create Account →</button>
+          <p class="auth-switch-text">Already have an account? <span onclick="switchAuthTab('login')">Login here</span></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Logged-in state -->
+    <div id="auth-loggedin" style="display:none;">
+      <h2 class="section-title">Hello,<br><em style="font-style:italic;color:var(--accent2);" id="loggedin-username-display">User</em></h2>
+      <div class="loggedin-card">
+        <div class="loggedin-avatar" id="loggedin-avatar">N</div>
+        <div class="loggedin-info">
+          <div class="loggedin-name" id="loggedin-name-display">—</div>
+          <div class="loggedin-email" id="loggedin-email-display">—</div>
+          <div class="loggedin-status"><span class="status-dot"></span>Logged in · Can comment on blog posts</div>
+        </div>
+      </div>
+      <button class="btn btn-danger" style="margin-top:2rem;" onclick="handleLogout()">Logout</button>
+    </div>
+
+  </section>
+</div>
+
+<!-- ====== BLOG ====== -->
+<div id="page-blog" class="page">
+  <section>
+    <div class="section-label">07 — Thoughts</div>
+    <h2 class="section-title">My<br><em style="font-style:italic;color:var(--accent2);">Blog</em></h2>
+
+    <!-- Blog post list -->
+    <div class="blog-posts" id="blog-posts-container">
+
+      <!-- Post 1 -->
+      <article class="blog-post" id="post-1">
+        <div class="blog-post-meta">
+          <span class="blog-date">Jan 12, 2025</span>
+          <span class="blog-tag-pill">Astronomy</span>
+        </div>
+        <h3 class="blog-post-title">Why I Fell in Love with the Stars</h3>
+        <p class="blog-post-excerpt">
+          Ever since I was a child in Dharan, I would lie on the roof and stare up at the Milky Way stretching across the sky. Nepal's clear mountain air gives you something most city-dwellers never experience — a genuinely dark sky. That's where it started. The moment I realized those faint smudges weren't just stars but entire galaxies billions of light-years away, something clicked. Physics stopped being equations and became a language the universe was speaking directly to me.
+        </p>
+        <p class="blog-post-excerpt">
+          Qualifying for IJSO opened my eyes to how competitive and beautiful the world of science olympiads is. But more than the competition, it was the conversations — with peers who cared about dark matter, neutron stars, and gravitational waves the same way I did. Science is lonely until it isn't.
+        </p>
+        <div class="blog-comments-section" data-post="1">
+          <div class="comments-header">
+            <span class="comments-count" id="count-1">0 Comments</span>
+          </div>
+          <div class="comments-list" id="comments-1"></div>
+          <div class="comment-form-area" id="comment-form-1">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </article>
+
+      <div class="blog-divider"></div>
+
+      <!-- Post 2 -->
+      <article class="blog-post" id="post-2">
+        <div class="blog-post-meta">
+          <span class="blog-date">Feb 3, 2025</span>
+          <span class="blog-tag-pill">Reflection</span>
+        </div>
+        <h3 class="blog-post-title">What NYPT Taught Me About Arguing</h3>
+        <p class="blog-post-excerpt">
+          The Nepal Young Physicists' Tournament is unlike any science competition I'd been in. You don't just solve problems — you defend solutions in front of opponents who actively try to dismantle your reasoning. It's brutal and brilliant in equal measure. My first fight, I stumbled. My physics was correct but my communication was scattered. I learned that knowing something and being able to explain it under pressure are completely different skills.
+        </p>
+        <p class="blog-post-excerpt">
+          What I took from NYPT wasn't just physics intuition. It was intellectual humility. Sometimes your opponent points out a flaw in your model and the honest thing to do is concede. That's not weakness — that's science.
+        </p>
+        <div class="blog-comments-section" data-post="2">
+          <div class="comments-header">
+            <span class="comments-count" id="count-2">0 Comments</span>
+          </div>
+          <div class="comments-list" id="comments-2"></div>
+          <div class="comment-form-area" id="comment-form-2">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </article>
+
+      <div class="blog-divider"></div>
+
+      <!-- Post 3 -->
+      <article class="blog-post" id="post-3">
+        <div class="blog-post-meta">
+          <span class="blog-date">Feb 20, 2025</span>
+          <span class="blog-tag-pill">Life</span>
+        </div>
+        <h3 class="blog-post-title">Moving to Kathmandu: A Culture Shock</h3>
+        <p class="blog-post-excerpt">
+          Leaving Dharan for Trinity International College in Kathmandu felt like jumping from a quiet lake into an ocean. The pace is different, the people are different, and the expectations are different. For the first few weeks I missed the slow mornings, the familiar streets, the mountains that framed every sunrise. Kathmandu doesn't give you that — it gives you chaos and opportunity in the same breath.
+        </p>
+        <p class="blog-post-excerpt">
+          But I'm adapting. I've found pockets of calm in the city — rooftops, small coffee shops, early-morning walks. And I've found that ambition is contagious when you're surrounded by people who take their futures seriously. I'm grateful for the discomfort. It means I'm growing.
+        </p>
+        <div class="blog-comments-section" data-post="3">
+          <div class="comments-header">
+            <span class="comments-count" id="count-3">0 Comments</span>
+          </div>
+          <div class="comments-list" id="comments-3"></div>
+          <div class="comment-form-area" id="comment-form-3">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </article>
+
     </div>
   </section>
 </div>
