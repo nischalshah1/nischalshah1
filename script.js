@@ -296,8 +296,75 @@ const POSTS = {
   }
 };
 
-// ====== BLOG GRID ======
-function updateCardCounts() {
+// ====== NEWSPAPER: SELECT STORY (index switching) ======
+function selectPost(id) {
+  // Update active index item
+  document.querySelectorAll('.np-index-list li').forEach((li, i) => {
+    li.classList.toggle('active', i + 1 === id);
+  });
+
+  const postData = {
+    1: {
+      kicker: 'Lead Story · Astronomy',
+      date: 'Jan 12, 2025',
+      title: 'Why I Fell in Love with the Stars',
+      body: `<p class="np-story-body np-dropcap">Ever since I was a child in Dharan, I would lie on the roof and stare up at the Milky Way stretching across the sky. Nepal's clear mountain air gives you something most city-dwellers never experience — a genuinely dark sky. That's where it started. The moment I realized those faint smudges weren't just stars but entire galaxies billions of light-years away, something clicked entirely.</p><p class="np-story-body">Physics stopped being equations and became a language the universe was speaking directly to me. Qualifying for IJSO opened my eyes to how competitive and beautiful the world of science olympiads truly is.</p>`,
+      commentId: 'card-count-1',
+      headlineClass: 'np-headline-lead',
+      readLabel: 'Continue Reading →',
+      belowVisible: true
+    },
+    2: {
+      kicker: 'Reflection · Physics',
+      date: 'Feb 3, 2025',
+      title: 'What NYPT Taught Me About Arguing',
+      body: `<p class="np-story-body np-dropcap">The Nepal Young Physicists' Tournament is unlike any science competition I'd been in. You don't just solve problems — you defend solutions in front of opponents who actively try to dismantle your reasoning. It's brutal and brilliant in equal measure.</p><p class="np-story-body">What I took from NYPT wasn't just physics intuition. It was intellectual humility. Sometimes your opponent points out a flaw in your model and the honest thing to do is concede. That's not weakness — that's science.</p>`,
+      commentId: 'card-count-2',
+      headlineClass: 'np-headline-lead',
+      readLabel: 'Continue Reading →',
+      belowVisible: false
+    },
+    3: {
+      kicker: 'Life · Kathmandu',
+      date: 'Feb 20, 2025',
+      title: 'Moving to Kathmandu: A Culture Shock',
+      body: `<p class="np-story-body np-dropcap">Leaving Dharan for Trinity International College in Kathmandu felt like jumping from a quiet lake into an ocean. The pace is different, the people are different, and the expectations are entirely different. For the first few weeks I missed the slow mornings, the familiar streets, the mountains that framed every sunrise.</p><p class="np-story-body">But I'm adapting. I've found pockets of calm in the city — rooftops, small coffee shops, early-morning walks. Ambition is contagious when you're surrounded by people who take their futures seriously.</p>`,
+      commentId: 'card-count-3',
+      headlineClass: 'np-headline-lead',
+      readLabel: 'Continue Reading →',
+      belowVisible: false
+    }
+  };
+
+  const p = postData[id];
+  const n = getComments(id).length;
+  const commentText = n + (n === 1 ? ' comment' : ' comments');
+
+  const leadStory = document.querySelector('.np-story-lead');
+  if (leadStory) {
+    leadStory.setAttribute('data-post', id);
+    leadStory.setAttribute('onclick', `openPost(${id})`);
+    leadStory.innerHTML = `
+      <div class="np-story-kicker">${p.kicker}</div>
+      <h2 class="np-story-headline ${p.headlineClass}">${p.title}</h2>
+      <div class="np-story-rule"></div>
+      ${p.body}
+      <div class="np-story-footer">
+        <span class="np-story-date">${p.date}</span>
+        <span class="np-story-read">${p.readLabel}</span>
+        <span class="np-story-comments">${commentText}</span>
+      </div>
+    `;
+  }
+
+  // Show/hide the below-grid row
+  const belowRule = document.querySelector('.np-below-rule');
+  const belowGrid = document.getElementById('np-below-grid');
+  if (belowRule) belowRule.style.display = p.belowVisible ? '' : 'none';
+  if (belowGrid) belowGrid.style.display = p.belowVisible ? '' : 'none';
+}
+
+
   let total = 0;
   [1, 2, 3].forEach(id => {
     const n = getComments(id).length;
