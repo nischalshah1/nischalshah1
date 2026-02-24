@@ -735,7 +735,7 @@ body.theme-forest header { background: rgba(6,26,8,0.95); }
 /* ── THREE-COLUMN BODY ── */
 .np-body {
   display: grid;
-  grid-template-columns: 200px 1px 1fr 1px 300px;
+  grid-template-columns: 200px 1px 1fr;
   gap: 0;
   padding-top: 2rem;
   min-height: 520px;
@@ -837,11 +837,24 @@ body.theme-forest header { background: rgba(6,26,8,0.95); }
   padding: 0 2rem;
 }
 
-/* ── RIGHT SIDE COLUMN ── */
-.np-col-side {
-  padding-left: 1.5rem;
-  display: flex;
-  flex-direction: column;
+/* ── RIGHT SIDE COLUMN (removed) ── */
+
+/* Below-lead two-column row */
+.np-below-rule {
+  height: 2px;
+  background: linear-gradient(to right, var(--accent), var(--border));
+  margin: 2rem 0;
+}
+
+.np-below-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+}
+
+.np-below-col-rule {
+  background: var(--border);
+  margin: 0 2rem;
 }
 
 .np-side-rule {
@@ -971,12 +984,12 @@ body.theme-forest header { background: rgba(6,26,8,0.95); }
 @media (max-width: 900px) {
   .np-body {
     grid-template-columns: 1fr;
-    gap: 0;
   }
   .np-col-rule { display: none; }
   .np-col-index { padding-right: 0; padding-bottom: 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-  .np-col-lead { padding: 0 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-  .np-col-side { padding-left: 0; }
+  .np-col-lead { padding: 0; }
+  .np-below-grid { grid-template-columns: 1fr; }
+  .np-below-col-rule { display: none; }
   .np-masthead-top { grid-template-columns: 1fr; text-align: center; gap: 0.5rem; }
   .np-vol, .np-dateline { text-align: center; }
   .np-masthead-strip { flex-wrap: wrap; gap: 0.8rem; }
