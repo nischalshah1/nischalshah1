@@ -298,13 +298,15 @@ const POSTS = {
 
 // ====== BLOG GRID ======
 function updateCardCounts() {
+  let total = 0;
   [1, 2, 3].forEach(id => {
+    const n = getComments(id).length;
+    total += n;
     const el = document.getElementById('card-count-' + id);
-    if (el) {
-      const n = getComments(id).length;
-      el.textContent = n + (n === 1 ? ' comment' : ' comments');
-    }
+    if (el) el.textContent = n + (n === 1 ? ' comment' : ' comments');
   });
+  const ticker = document.getElementById('ticker-total');
+  if (ticker) ticker.textContent = total + (total === 1 ? ' comment' : ' comments');
 }
 
 // ====== OPEN / CLOSE POST MODAL ======
