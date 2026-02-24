@@ -57,36 +57,27 @@ function resetContactForm() {
 
 // ====== THEME SWITCHER ======
 const themeIcons = {
-  dark:   '🌙',
-  light:  '☀️',
-  retro:  '📺',
-  love:   '💗',
-  ocean:  '🌊',
-  forest: '🌿'
+  dark: '🌙', light: '☀️', retro: '📺',
+  love: '💗', ocean: '🌊', forest: '🌿'
+};
+
+const storage = {
+  get: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} }
 };
 
 function setTheme(theme) {
-  // Remove all theme classes
-  document.body.className = document.body.className
-    .replace(/theme-\S+/g, '').trim();
+  document.body.className = document.body.className.replace(/theme-\S+/g, '').trim();
+  if (theme !== 'dark') document.body.classList.add('theme-' + theme);
 
-  // Add new theme class (dark is default — no class needed)
-  if (theme !== 'dark') {
-    document.body.classList.add('theme-' + theme);
-  }
+  const iconEl = document.getElementById('theme-icon');
+  if (iconEl) iconEl.textContent = themeIcons[theme];
 
-  // Update icon in button
-  document.getElementById('theme-icon').textContent = themeIcons[theme];
-
-  // Mark active button in panel
   document.querySelectorAll('.theme-opt').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.theme === theme);
   });
 
-  // Save preference so it persists on refresh
-  localStorage.setItem('portfolio-theme', theme);
-
-  // Close panel after selecting
+  storage.set('portfolio-theme', theme);
   closeThemePanel();
 }
 
@@ -98,16 +89,13 @@ function closeThemePanel() {
   document.getElementById('theme-panel').classList.remove('open');
 }
 
-// Close panel when clicking anywhere outside it
 document.addEventListener('click', function(e) {
   const wrapper = document.querySelector('.theme-wrapper');
-  if (wrapper && !wrapper.contains(e.target)) {
-    closeThemePanel();
-  }
+  if (wrapper && !wrapper.contains(e.target)) closeThemePanel();
 });
 
-// Load saved theme on page start
-(function () {
-  const saved = localStorage.getItem('portfolio-theme') || 'dark';
+// Load saved theme on startup
+(function() {
+  const saved = storage.get('portfolio-theme') || 'dark';
   setTheme(saved);
 })();
