@@ -91,34 +91,68 @@ document.addEventListener('click', e => {
 // ====================================================
 const ConstellationLoader = (function () {
 
-  // ── Orion shape (normalised 0–1, centred around 0.5,0.45) ──
+  // ── Full Orion constellation (normalised 0–1 coords) ──
+  // Based on real relative positions of named Orion stars
   const STARS_DEF = [
-    { x: 0.50, y: 0.28 }, // 0  head
-    { x: 0.44, y: 0.36 }, // 1  left shoulder
-    { x: 0.56, y: 0.36 }, // 2  right shoulder
-    { x: 0.47, y: 0.46 }, // 3  belt L
-    { x: 0.50, y: 0.47 }, // 4  belt M
-    { x: 0.53, y: 0.46 }, // 5  belt R
-    { x: 0.43, y: 0.58 }, // 6  left knee
-    { x: 0.57, y: 0.58 }, // 7  right knee
-    { x: 0.41, y: 0.67 }, // 8  left foot
-    { x: 0.59, y: 0.67 }, // 9  right foot
+    // ── Core body ──
+    { x: 0.500, y: 0.130, name: 'Meissa',     r: 2.2 }, // 0  head / λ Ori
+    { x: 0.400, y: 0.310, name: 'Betelgeuse', r: 3.4 }, // 1  left shoulder / α Ori (giant — bigger dot)
+    { x: 0.610, y: 0.285, name: 'Bellatrix',  r: 2.5 }, // 2  right shoulder / γ Ori
+    { x: 0.440, y: 0.500, name: 'Alnitak',    r: 2.2 }, // 3  belt left / ζ Ori
+    { x: 0.500, y: 0.488, name: 'Alnilam',    r: 2.2 }, // 4  belt middle / ε Ori
+    { x: 0.560, y: 0.475, name: 'Mintaka',    r: 2.0 }, // 5  belt right / δ Ori
+    { x: 0.370, y: 0.700, name: 'Rigel',      r: 3.6 }, // 6  left foot / β Ori (brightest — biggest dot)
+    { x: 0.590, y: 0.715, name: 'Saiph',      r: 2.4 }, // 7  right foot / κ Ori
+
+    // ── Sword (hangs below belt) ──
+    { x: 0.462, y: 0.560, name: 'Sword N',    r: 1.6 }, // 8  42 Ori (north sword)
+    { x: 0.455, y: 0.610, name: 'Trapezium',  r: 2.0 }, // 9  θ1 Ori / Great Nebula centre
+    { x: 0.448, y: 0.660, name: 'Sword S',    r: 1.6 }, // 10 ι Ori (south sword)
+
+    // ── Shield (π stars, right/west side) ──
+    { x: 0.730, y: 0.255, name: 'π1 Ori',     r: 1.4 }, // 11
+    { x: 0.755, y: 0.330, name: 'π2 Ori',     r: 1.4 }, // 12
+    { x: 0.765, y: 0.410, name: 'π3 Ori',     r: 1.6 }, // 13
+    { x: 0.755, y: 0.490, name: 'π4 Ori',     r: 1.4 }, // 14
+    { x: 0.730, y: 0.560, name: 'π5 Ori',     r: 1.4 }, // 15
+    { x: 0.695, y: 0.625, name: 'π6 Ori',     r: 1.4 }, // 16
+
+    // ── Raised club / left arm ──
+    { x: 0.360, y: 0.185, name: 'μ Ori',      r: 1.5 }, // 17  upper arm
+    { x: 0.285, y: 0.155, name: 'ξ Ori',      r: 1.4 }, // 18  club tip
+    { x: 0.215, y: 0.195, name: 'χ1 Ori',     r: 1.3 }, // 19  club far tip
+
+    // ── η Ori (between Bellatrix and belt) ──
+    { x: 0.585, y: 0.385, name: 'η Ori',      r: 1.4 }, // 20
   ];
 
   const EDGES_DEF = [
-    [0,1],[0,2],[1,2],       // head + shoulders
-    [1,3],[2,5],             // shoulders to belt
-    [3,4],[4,5],             // belt
-    [3,6],[5,7],             // belt to knees
-    [6,8],[7,9],             // knees to feet
+    // Head & shoulders
+    [0, 1], [0, 2],
+    // Shoulder to shoulder (faint cross-brace)
+    [1, 2],
+    // Shoulders down to belt
+    [1, 3],          // Betelgeuse → Alnitak
+    [2, 20], [20, 5], // Bellatrix → η Ori → Mintaka
+    // Belt
+    [3, 4], [4, 5],
+    // Belt down to feet
+    [3, 6],          // Alnitak → Rigel
+    [5, 7],          // Mintaka → Saiph
+    // Sword
+    [3, 8], [8, 9], [9, 10],
+    // Shield arc
+    [2, 11], [11, 12], [12, 13], [13, 14], [14, 15], [15, 16],
+    // Raised arm / club
+    [1, 17], [17, 18], [18, 19],
   ];
 
   // timings (ms)
-  const STAR_INTERVAL  = 90;   // delay between each star appearing
-  const STAR_FADE_DUR  = 300;  // how long each star fades in
-  const LINE_DELAY     = 60;   // delay between each line starting to draw
-  const LINE_DUR       = 260;  // how long each line takes to draw
-  const HOLD_MS        = 600;  // hold after everything drawn
+  const STAR_INTERVAL  = 70;   // delay between each star appearing
+  const STAR_FADE_DUR  = 280;  // how long each star fades in
+  const LINE_DELAY     = 55;   // delay between each line starting to draw
+  const LINE_DUR       = 240;  // how long each line takes to draw
+  const HOLD_MS        = 750;  // hold after everything drawn
   const FADE_OUT_MS    = 600;  // CSS transition duration
 
   const PAGE_LABELS = {
@@ -167,9 +201,9 @@ const ConstellationLoader = (function () {
     stars = STARS_DEF.map(s => ({
       x: ox + (s.x - 0.5) * scale,
       y: oy + (s.y - 0.5) * scale,
-      r: 2 + Math.random() * 1.5,
+      r: (s.r || 2) * Math.min(W, H) / 700, // scale radius with screen
       alpha: 0,
-      born: null,          // timestamp when this star starts fading in
+      born: null,
     }));
 
     edges = EDGES_DEF.map(([a, b]) => ({
@@ -178,12 +212,12 @@ const ConstellationLoader = (function () {
       born: null,
     }));
 
-    // scattered background micro-stars
-    bgStars = Array.from({ length: 120 }, () => ({
+    // scattered background micro-stars — more of them for atmosphere
+    bgStars = Array.from({ length: 200 }, () => ({
       x: Math.random() * W,
       y: Math.random() * H,
-      r: Math.random() * 0.7 + 0.15,
-      base: Math.random() * 0.25 + 0.05,
+      r: Math.random() * 0.9 + 0.15,
+      base: Math.random() * 0.22 + 0.04,
       phase: Math.random() * Math.PI * 2,
       speed: Math.random() * 1.2 + 0.4,
     }));
@@ -233,12 +267,13 @@ const ConstellationLoader = (function () {
       s.alpha = easeOut(t);
       if (s.alpha <= 0) continue;
 
-      // glow halo
-      const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 6);
-      grd.addColorStop(0, `rgba(${r},${g},${b},${s.alpha * 0.35})`);
+      // glow halo — scales with star size
+      const glowRadius = s.r * 5.5;
+      const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, glowRadius);
+      grd.addColorStop(0, `rgba(${r},${g},${b},${s.alpha * 0.4})`);
       grd.addColorStop(1, `rgba(${r},${g},${b},0)`);
       ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r * 6, 0, Math.PI * 2);
+      ctx.arc(s.x, s.y, glowRadius, 0, Math.PI * 2);
       ctx.fillStyle = grd;
       ctx.fill();
 
