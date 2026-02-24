@@ -97,40 +97,38 @@ const ConstellationLoader = (function () {
   // with Dubhe (UMa tip) connecting up toward Polaris (UMi tail).
 
   const STARS_DEF = [
-    // ── Ursa Major (Big Dipper) — 0..6 bowl, 6..10 handle ──
-    // Bowl (traced counter-clockwise from bottom-left)
-    { x: 0.100, y: 0.820, name: 'Phad',      r: 2.6 }, // 0  bowl bottom-left
-    { x: 0.175, y: 0.750, name: 'Merak',     r: 2.8 }, // 1  bowl bottom-right (pointer)
-    { x: 0.155, y: 0.640, name: 'Dubhe',     r: 3.0 }, // 2  bowl top-right (pointer / brightest)
-    { x: 0.075, y: 0.695, name: 'Megrez',    r: 2.2 }, // 3  bowl top-left / handle join
-    // Handle (from Megrez outward)
-    { x: 0.000, y: 0.610, name: 'Alioth',    r: 2.5 }, // 4  handle 1st
-    { x: -0.05, y: 0.510, name: 'Mizar',     r: 2.6 }, // 5  handle 2nd
-    { x: -0.04, y: 0.400, name: 'Alkaid',    r: 2.4 }, // 6  handle tip
+    // ── Ursa Major (Big Dipper) ──
+    // Bowl: rectangle, bottom-left of screen
+    { x: 0.08,  y: 0.78, name: 'Phad',      r: 2.6 }, // 0  bowl bottom-left
+    { x: 0.20,  y: 0.75, name: 'Merak',     r: 2.8 }, // 1  bowl bottom-right
+    { x: 0.21,  y: 0.62, name: 'Dubhe',     r: 3.0 }, // 2  bowl top-right
+    { x: 0.09,  y: 0.65, name: 'Megrez',    r: 2.2 }, // 3  bowl top-left, handle joins here
+    // Handle: curves up and to the left
+    { x: 0.02,  y: 0.54, name: 'Alioth',    r: 2.5 }, // 4  handle 1st
+    { x: -0.03, y: 0.43, name: 'Mizar',     r: 2.6 }, // 5  handle 2nd
+    { x: -0.10, y: 0.33, name: 'Alkaid',    r: 2.4 }, // 6  handle tip (top-left)
 
-    // ── Ursa Minor (Little Dipper) — 7..13 ──
-    // Bowl
-    { x: 0.560, y: 0.170, name: 'Kochab',    r: 2.8 }, // 7  bowl outer-left (bright)
-    { x: 0.620, y: 0.220, name: 'Pherkad',   r: 2.4 }, // 8  bowl outer-right
-    { x: 0.655, y: 0.150, name: 'UMi-γ',     r: 1.8 }, // 9  bowl far-right
-    { x: 0.600, y: 0.100, name: 'UMi-δ',     r: 1.8 }, // 10 bowl top
-    // Handle
-    { x: 0.545, y: 0.120, name: 'UMi-ε',     r: 1.6 }, // 11 handle 1st
-    { x: 0.490, y: 0.160, name: 'UMi-ζ',     r: 1.6 }, // 12 handle 2nd
-    { x: 0.440, y: 0.195, name: 'Polaris',   r: 3.2 }, // 13 Polaris — North Star (handle end / tail)
+    // ── Ursa Minor (Little Dipper) ──
+    // Bowl: smaller rectangle, upper-right of screen
+    { x: 0.52,  y: 0.28, name: 'Kochab',    r: 2.8 }, // 7  bowl bottom-left
+    { x: 0.63,  y: 0.26, name: 'Pherkad',   r: 2.4 }, // 8  bowl bottom-right
+    { x: 0.66,  y: 0.15, name: 'UMi-γ',     r: 1.8 }, // 9  bowl top-right
+    { x: 0.55,  y: 0.14, name: 'UMi-δ',     r: 1.8 }, // 10 bowl top-left
+    // Handle: extends to the right
+    { x: 0.72,  y: 0.18, name: 'UMi-ε',     r: 1.6 }, // 11 handle 1st
+    { x: 0.80,  y: 0.22, name: 'UMi-ζ',     r: 1.6 }, // 12 handle 2nd
+    { x: 0.88,  y: 0.19, name: 'Polaris',   r: 3.2 }, // 13 North Star / handle tip
   ];
 
   const EDGES_DEF = [
-    // Ursa Major bowl
+    // Ursa Major bowl (rectangle)
     [0, 1], [1, 2], [2, 3], [3, 0],
     // Ursa Major handle
     [3, 4], [4, 5], [5, 6],
-    // Ursa Minor bowl
+    // Ursa Minor bowl (rectangle)
     [7, 8], [8, 9], [9, 10], [10, 7],
     // Ursa Minor handle
-    [7, 11], [11, 12], [12, 13],
-    // Connecting line: Dubhe (UMa) → Polaris (UMi) — the famous "pointer" line
-    [2, 13],
+    [8, 11], [11, 12], [12, 13],
   ];
 
   // timings (ms)
@@ -182,10 +180,10 @@ const ConstellationLoader = (function () {
   }
 
   function buildScene() {
-    // Scale so both dippers fill nicely
-    const scale = Math.min(W, H) * 0.82;
-    // Shift origin so the left handle doesn't clip
-    const ox = W * 0.54, oy = H * 0.50;
+    // Scale so both dippers fill the screen nicely
+    const scale = Math.min(W, H) * 0.78;
+    // Push origin right so Big Dipper's left handle doesn't clip
+    const ox = W * 0.58, oy = H * 0.50;
 
     stars = STARS_DEF.map(s => ({
       x: ox + (s.x - 0.3) * scale,
