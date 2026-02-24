@@ -294,15 +294,15 @@
       <div class="np-col np-col-index">
         <div class="np-index-label">In This Edition</div>
         <ol class="np-index-list">
-          <li onclick="openPost(1)">
+          <li class="active" onclick="selectPost(1)">
             <span class="np-idx-n">I.</span>
             <span class="np-idx-title">Why I Fell in Love with the Stars</span>
           </li>
-          <li onclick="openPost(2)">
+          <li onclick="selectPost(2)">
             <span class="np-idx-n">II.</span>
             <span class="np-idx-title">What NYPT Taught Me About Arguing</span>
           </li>
-          <li onclick="openPost(3)">
+          <li onclick="selectPost(3)">
             <span class="np-idx-n">III.</span>
             <span class="np-idx-title">Moving to Kathmandu: A Culture Shock</span>
           </li>
@@ -323,7 +323,7 @@
 
       <!-- CENTER COLUMN: lead story + two below -->
       <div class="np-col np-col-lead">
-        <div class="np-story np-story-lead" onclick="openPost(1)">
+        <div class="np-story np-story-lead" data-post="1" onclick="openPost(1)">
           <div class="np-story-kicker">Lead Story · Astronomy</div>
           <h2 class="np-story-headline np-headline-lead">Why I Fell in<br>Love with<br>the Stars</h2>
           <div class="np-story-rule"></div>
@@ -339,9 +339,9 @@
         <div class="np-below-rule"></div>
 
         <!-- Two smaller stories in a row below the lead -->
-        <div class="np-below-grid">
+        <div class="np-below-grid" id="np-below-grid">
 
-          <div class="np-story np-story-small" onclick="openPost(2)">
+          <div class="np-story np-story-small" data-post="2" onclick="openPost(2)">
             <div class="np-story-kicker">Reflection · Physics</div>
             <h3 class="np-story-headline np-headline-small">What NYPT Taught Me About Arguing</h3>
             <div class="np-story-rule"></div>
@@ -355,7 +355,7 @@
 
           <div class="np-below-col-rule"></div>
 
-          <div class="np-story np-story-small" onclick="openPost(3)">
+          <div class="np-story np-story-small" data-post="3" onclick="openPost(3)">
             <div class="np-story-kicker">Life · Kathmandu</div>
             <h3 class="np-story-headline np-headline-small">Moving to Kathmandu: A Culture Shock</h3>
             <div class="np-story-rule"></div>
