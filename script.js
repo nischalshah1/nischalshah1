@@ -97,37 +97,38 @@ const ConstellationLoader = (function () {
   // with Dubhe (UMa tip) connecting up toward Polaris (UMi tail).
 
   const STARS_DEF = [
-    // ── Ursa Major (Big Dipper) ──
-    // Bowl: bottom-left, tilted rectangle
-    { x: 0.08,  y: 0.82, name: 'Phad',      r: 2.6 }, // 0  bowl bottom-left
-    { x: 0.22,  y: 0.78, name: 'Merak',     r: 2.8 }, // 1  bowl bottom-right
-    { x: 0.24,  y: 0.63, name: 'Dubhe',     r: 3.0 }, // 2  bowl top-right
-    { x: 0.10,  y: 0.67, name: 'Megrez',    r: 2.2 }, // 3  bowl top-left
-    // Handle: sweeps up and to the right toward Little Dipper
-    { x: 0.35,  y: 0.52, name: 'Alioth',    r: 2.5 }, // 4  handle 1st
-    { x: 0.48,  y: 0.38, name: 'Mizar',     r: 2.6 }, // 5  handle 2nd
-    { x: 0.58,  y: 0.26, name: 'Alkaid',    r: 2.4 }, // 6  handle tip / joins Little Dipper
+    // ── Ursa Major (Big Dipper) — bottom-left ──
+    // Bowl: wide rectangle, tilted slightly
+    { x: 0.05,  y: 0.85, name: 'Phad',      r: 2.6 }, // 0  bowl bottom-left
+    { x: 0.22,  y: 0.80, name: 'Merak',     r: 2.8 }, // 1  bowl bottom-right
+    { x: 0.20,  y: 0.65, name: 'Dubhe',     r: 3.0 }, // 2  bowl top-right
+    { x: 0.03,  y: 0.70, name: 'Megrez',    r: 2.2 }, // 3  bowl top-left
+    // Handle: goes up-left from top-left of bowl
+    { x: -0.08, y: 0.57, name: 'Alioth',    r: 2.5 }, // 4  handle 1st
+    { x: -0.14, y: 0.43, name: 'Mizar',     r: 2.6 }, // 5  handle 2nd (bends left)
+    { x: -0.22, y: 0.30, name: 'Alkaid',    r: 2.4 }, // 6  handle tip (far top-left)
 
-    // ── Ursa Minor (Little Dipper) ──
-    // Handle end connects from Alkaid, bowl opens to the right
-    { x: 0.68,  y: 0.18, name: 'UMi-ζ',    r: 1.8 }, // 7  handle continuation
-    { x: 0.78,  y: 0.13, name: 'Polaris',   r: 3.2 }, // 8  North Star / bowl bottom-left
-    // Bowl: upper-right, tilted rectangle
-    { x: 0.82,  y: 0.22, name: 'Kochab',    r: 2.8 }, // 9  bowl bottom-right
-    { x: 0.90,  y: 0.18, name: 'Pherkad',   r: 2.4 }, // 10 bowl top-right
-    { x: 0.88,  y: 0.08, name: 'UMi-γ',     r: 1.8 }, // 11 bowl top-left
-    { x: 0.80,  y: 0.05, name: 'UMi-δ',     r: 1.8 }, // 12 bowl far-left top
+    // ── Ursa Minor (Little Dipper) — top-right, SEPARATE ──
+    // Bowl: smaller rectangle, upper-right area
+    { x: 0.42,  y: 0.22, name: 'Kochab',    r: 2.8 }, // 7  bowl bottom-left (bright)
+    { x: 0.55,  y: 0.18, name: 'Pherkad',   r: 2.4 }, // 8  bowl bottom-right
+    { x: 0.58,  y: 0.07, name: 'UMi-γ',     r: 1.8 }, // 9  bowl top-right
+    { x: 0.45,  y: 0.08, name: 'UMi-δ',     r: 1.8 }, // 10 bowl top-left
+    // Handle: goes right and slightly down from bowl
+    { x: 0.65,  y: 0.22, name: 'UMi-ε',     r: 1.6 }, // 11 handle 1st
+    { x: 0.74,  y: 0.28, name: 'UMi-ζ',     r: 1.6 }, // 12 handle 2nd
+    { x: 0.82,  y: 0.22, name: 'Polaris',   r: 3.2 }, // 13 North Star / handle tip
   ];
 
   const EDGES_DEF = [
     // Ursa Major bowl (rectangle)
     [0, 1], [1, 2], [2, 3], [3, 0],
-    // Ursa Major handle sweeping up-right
-    [2, 4], [4, 5], [5, 6],
-    // Connection: Big Dipper handle tip → Little Dipper handle
-    [6, 7], [7, 8],
-    // Ursa Minor bowl (rectangle)
-    [8, 9], [9, 10], [10, 11], [11, 12], [12, 8],
+    // Ursa Major handle (up-left)
+    [3, 4], [4, 5], [5, 6],
+    // Ursa Minor bowl (rectangle) — completely separate
+    [7, 8], [8, 9], [9, 10], [10, 7],
+    // Ursa Minor handle (right)
+    [8, 11], [11, 12], [12, 13],
   ];
 
   // timings (ms)
@@ -179,10 +180,8 @@ const ConstellationLoader = (function () {
   }
 
   function buildScene() {
-    // Scale so the full connected shape fits nicely
-    const scale = Math.min(W, H) * 0.85;
-    // Center the shape — it spans left to right so push origin left
-    const ox = W * 0.42, oy = H * 0.52;
+    const scale = Math.min(W, H) * 0.80;
+    const ox = W * 0.62, oy = H * 0.50;
 
     stars = STARS_DEF.map(s => ({
       x: ox + (s.x - 0.3) * scale,
