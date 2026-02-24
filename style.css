@@ -78,6 +78,22 @@ nav a:hover, nav a.active { color: var(--accent); }
   border-color: var(--success);
   color: var(--success);
 }
+#cl-page-name {
+  position: relative;
+  z-index: 2;
+  margin-top: 56vh;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  color: var(--accent);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  opacity: 0;
+  display: flex;
+  gap: 0.02em;
+  perspective: 600px;
+  transform-style: preserve-3d;
+}
 
 /* SOCIAL ICONS */
 .social-icons { display: flex; gap: 10px; align-items: center; }
@@ -1319,3 +1335,4 @@ body.theme-forest header { background: rgba(6,26,8,0.95); }
   .blog-modal-panel { width: 100vw; }
   .blog-modal-scroll { padding: 2rem 1.5rem 3rem; }
 }
+
