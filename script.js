@@ -1,28 +1,23 @@
-// ====== EMAILJS INIT ======
+// ====== EMAILJS ======
 emailjs.init("YdalPlh-x2bdL6eFV");
 
-// ====== STORAGE HELPERS ======
-const storage = {
-  get: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } },
+// ====== STORAGE ======
+const store = {
+  get: k => { try { return localStorage.getItem(k); } catch(e) { return null; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} },
-  remove: (k) => { try { localStorage.removeItem(k); } catch(e) {} }
+  del: k => { try { localStorage.removeItem(k); } catch(e) {} }
 };
 
 // ====== NAVIGATION ======
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
   document.querySelectorAll('nav a').forEach(a => {
-    if (a.getAttribute('onclick') && a.getAttribute('onclick').includes("'" + page + "'")) {
-      a.classList.add('active');
-    }
+    a.classList.toggle('active', a.getAttribute('onclick') && a.getAttribute('onclick').includes("'" + page + "'"));
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // Refresh blog comments and login state on page switch
-  if (page === 'blog') renderAllCommentForms();
-  if (page === 'login') refreshLoginPage();
+  if (page === 'login') { refreshLoginPage(); startStarfield('star-canvas'); }
+  if (page === 'blog') updateCardCounts();
 }
 
 // ====== TOAST ======
@@ -30,31 +25,30 @@ function showToast(msg, type = 'success') {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'show ' + type;
-  setTimeout(() => { t.className = ''; }, 3000);
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => { t.className = ''; }, 3000);
 }
 
 // ====== CONTACT FORM ======
 function submitContactForm(e) {
   e.preventDefault();
-  const btn = document.getElementById("cf-submit-btn");
-  btn.textContent = "Sending...";
-  btn.disabled = true;
-  const params = {
-    name:    document.getElementById("cf-name").value,
-    email:   document.getElementById("cf-email").value,
-    subject: document.getElementById("cf-subject").value,
-    message: document.getElementById("cf-message").value,
+  const btn = document.getElementById('cf-submit-btn');
+  btn.textContent = 'Sending...'; btn.disabled = true;
+  const p = {
+    name:    document.getElementById('cf-name').value,
+    email:   document.getElementById('cf-email').value,
+    subject: document.getElementById('cf-subject').value,
+    message: document.getElementById('cf-message').value,
   };
-  emailjs.send("service_gfc52dt", "template_onqwv1l", params)
+  emailjs.send('service_gfc52dt', 'template_onqwv1l', p)
     .then(() => {
-      document.getElementById("contact-form").style.display = "none";
-      document.getElementById("cf-success").style.display = "block";
+      document.getElementById('contact-form').style.display = 'none';
+      document.getElementById('cf-success').style.display = 'block';
     })
-    .catch((error) => {
-      alert("Failed to send message. Please try again.");
-      btn.textContent = "Send Message";
-      btn.disabled = false;
-      console.error(error);
+    .catch(err => {
+      alert('Failed to send. Please try again.');
+      btn.textContent = 'Send Message'; btn.disabled = false;
+      console.error(err);
     });
 }
 
@@ -63,118 +57,110 @@ function resetContactForm() {
   document.getElementById('contact-form').style.display = 'flex';
   document.getElementById('cf-success').style.display = 'none';
   const btn = document.getElementById('cf-submit-btn');
-  btn.textContent = 'Send Message';
-  btn.disabled = false;
+  btn.textContent = 'Send Message'; btn.disabled = false;
 }
 
-// ====== THEME SWITCHER ======
-const themeIcons = {
-  dark: '🌙', light: '☀️', retro: '📺',
-  love: '💗', ocean: '🌊', forest: '🌿'
-};
+// ====== THEME ======
+const themeIcons = { dark:'🌙', light:'☀️', retro:'📺', love:'💗', ocean:'🌊', forest:'🌿' };
 
-function setTheme(theme) {
-  document.body.className = document.body.className.replace(/theme-\S+/g, '').trim();
-  if (theme !== 'dark') document.body.classList.add('theme-' + theme);
-  const iconEl = document.getElementById('theme-icon');
-  if (iconEl) iconEl.textContent = themeIcons[theme];
-  document.querySelectorAll('.theme-opt').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.theme === theme);
-  });
-  storage.set('portfolio-theme', theme);
+function setTheme(t) {
+  document.body.className = document.body.className.replace(/theme-\S+/g,'').trim();
+  if (t !== 'dark') document.body.classList.add('theme-' + t);
+  const el = document.getElementById('theme-icon');
+  if (el) el.textContent = themeIcons[t];
+  document.querySelectorAll('.theme-opt').forEach(b => b.classList.toggle('active', b.dataset.theme === t));
+  store.set('portfolio-theme', t);
   closeThemePanel();
 }
 
-function toggleThemePanel() {
-  document.getElementById('theme-panel').classList.toggle('open');
-}
+function toggleThemePanel() { document.getElementById('theme-panel').classList.toggle('open'); }
+function closeThemePanel()  { document.getElementById('theme-panel').classList.remove('open'); }
 
-function closeThemePanel() {
-  document.getElementById('theme-panel').classList.remove('open');
-}
-
-document.addEventListener('click', function(e) {
-  const wrapper = document.querySelector('.theme-wrapper');
-  if (wrapper && !wrapper.contains(e.target)) closeThemePanel();
+document.addEventListener('click', e => {
+  const w = document.querySelector('.theme-wrapper');
+  if (w && !w.contains(e.target)) closeThemePanel();
 });
 
-// Load saved theme on startup
-(function() {
-  const saved = storage.get('portfolio-theme') || 'dark';
-  setTheme(saved);
-})();
+(function() { setTheme(store.get('portfolio-theme') || 'dark'); })();
+
+// ====== STARFIELD CANVAS ======
+const starfieldInstances = {};
+
+function startStarfield(canvasId) {
+  if (starfieldInstances[canvasId]) return; // already running
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let W, H, stars;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function makeStars(n) {
+    stars = Array.from({ length: n }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.2,
+      speed: Math.random() * 0.15 + 0.03,
+      alpha: Math.random(),
+      dalpha: (Math.random() - 0.5) * 0.008,
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      s.alpha += s.dalpha;
+      if (s.alpha <= 0 || s.alpha >= 1) s.dalpha *= -1;
+      s.alpha = Math.max(0, Math.min(1, s.alpha));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232, 213, 163, ${s.alpha * 0.9})`;
+      ctx.fill();
+    }
+    // Draw a few connecting lines for constellation effect
+    for (let i = 0; i < stars.length; i += 12) {
+      const a = stars[i], b = stars[(i + 7) % stars.length];
+      const dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = `rgba(232, 213, 163, ${0.06 * (1 - dist / 120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+    starfieldInstances[canvasId] = requestAnimationFrame(draw);
+  }
+
+  const ro = new ResizeObserver(() => { resize(); makeStars(180); });
+  ro.observe(canvas);
+  resize();
+  makeStars(180);
+  starfieldInstances[canvasId] = requestAnimationFrame(draw);
+}
 
 // ====== AUTH HELPERS ======
 function getUsers() {
-  try { return JSON.parse(storage.get('portfolio-users') || '{}'); } catch(e) { return {}; }
+  try { return JSON.parse(store.get('portfolio-users') || '{}'); } catch(e) { return {}; }
 }
-
-function saveUsers(users) {
-  storage.set('portfolio-users', JSON.stringify(users));
-}
-
+function saveUsers(u) { store.set('portfolio-users', JSON.stringify(u)); }
 function getCurrentUser() {
-  try { return JSON.parse(storage.get('portfolio-current-user') || 'null'); } catch(e) { return null; }
+  try { return JSON.parse(store.get('portfolio-current-user') || 'null'); } catch(e) { return null; }
 }
-
-function setCurrentUser(user) {
-  storage.set('portfolio-current-user', JSON.stringify(user));
-}
-
-function isLoggedIn() {
-  return getCurrentUser() !== null;
-}
-
-// ====== AUTH UI ======
-function switchAuthTab(tab) {
-  const loginForm = document.getElementById('auth-login-form');
-  const registerForm = document.getElementById('auth-register-form');
-  const tabLogin = document.getElementById('tab-login');
-  const tabReg = document.getElementById('tab-register');
-
-  if (tab === 'login') {
-    loginForm.style.display = '';
-    registerForm.style.display = 'none';
-    tabLogin.classList.add('active');
-    tabReg.classList.remove('active');
-    document.getElementById('login-error').style.display = 'none';
-  } else {
-    loginForm.style.display = 'none';
-    registerForm.style.display = '';
-    tabLogin.classList.remove('active');
-    tabReg.classList.add('active');
-    document.getElementById('reg-error').style.display = 'none';
-  }
-}
-
-function showAuthError(id, msg) {
-  const el = document.getElementById(id);
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function refreshLoginPage() {
-  const user = getCurrentUser();
-  if (user) {
-    document.getElementById('auth-panel').style.display = 'none';
-    document.getElementById('auth-loggedin').style.display = 'block';
-    document.getElementById('loggedin-username-display').textContent = user.username;
-    document.getElementById('loggedin-name-display').textContent = user.username;
-    document.getElementById('loggedin-email-display').textContent = user.email;
-    document.getElementById('loggedin-avatar').textContent = user.username.charAt(0).toUpperCase();
-  } else {
-    document.getElementById('auth-panel').style.display = 'block';
-    document.getElementById('auth-loggedin').style.display = 'none';
-  }
-  updateNavLoginBtn();
-}
+function setCurrentUser(u) { store.set('portfolio-current-user', JSON.stringify(u)); }
+function isLoggedIn() { return getCurrentUser() !== null; }
 
 function updateNavLoginBtn() {
   const btn = document.getElementById('nav-login-btn');
   if (!btn) return;
-  const user = getCurrentUser();
-  if (user) {
-    btn.textContent = user.username.charAt(0).toUpperCase() + ' Account';
+  const u = getCurrentUser();
+  if (u) {
+    btn.textContent = u.username.charAt(0).toUpperCase() + u.username.slice(1, 5) + '…';
     btn.classList.add('logged-in');
   } else {
     btn.textContent = 'Login';
@@ -182,42 +168,80 @@ function updateNavLoginBtn() {
   }
 }
 
+function refreshLoginPage() {
+  const u = getCurrentUser();
+  const panel = document.getElementById('auth-panel');
+  const loggedIn = document.getElementById('auth-loggedin');
+  if (!panel || !loggedIn) return;
+
+  if (u) {
+    panel.style.display = 'none';
+    loggedIn.style.display = 'block';
+    const el = id => document.getElementById(id);
+    el('loggedin-username-display').textContent = u.username;
+    el('loggedin-email-display').textContent = u.email;
+    el('loggedin-avatar').textContent = u.username.charAt(0).toUpperCase();
+    startStarfield('star-canvas-li');
+  } else {
+    panel.style.display = '';
+    loggedIn.style.display = 'none';
+    startStarfield('star-canvas');
+  }
+  updateNavLoginBtn();
+}
+
+// ====== AUTH TABS ======
+function switchAuthTab(tab) {
+  const lf = document.getElementById('auth-login-form');
+  const rf = document.getElementById('auth-register-form');
+  const tl = document.getElementById('tab-login');
+  const tr = document.getElementById('tab-register');
+  const pill = document.getElementById('auth-pill-bg');
+
+  if (tab === 'login') {
+    lf.style.display = ''; rf.style.display = 'none';
+    tl.classList.add('active'); tr.classList.remove('active');
+    if (pill) pill.classList.remove('right');
+    document.getElementById('login-error').style.display = 'none';
+  } else {
+    lf.style.display = 'none'; rf.style.display = '';
+    tl.classList.remove('active'); tr.classList.add('active');
+    if (pill) pill.classList.add('right');
+    document.getElementById('reg-error').style.display = 'none';
+  }
+}
+
+function showAuthErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
 // ====== REGISTER ======
 function handleRegister(e) {
   e.preventDefault();
   const username = document.getElementById('reg-username').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
+  const email    = document.getElementById('reg-email').value.trim();
   const password = document.getElementById('reg-password').value;
-  const confirm = document.getElementById('reg-confirm').value;
+  const confirm  = document.getElementById('reg-confirm').value;
 
-  if (username.length < 3) return showAuthError('reg-error', 'Username must be at least 3 characters.');
-  if (!/^[a-zA-Z0-9_]+$/.test(username)) return showAuthError('reg-error', 'Username can only contain letters, numbers, and underscores.');
-  if (password.length < 6) return showAuthError('reg-error', 'Password must be at least 6 characters.');
-  if (password !== confirm) return showAuthError('reg-error', 'Passwords do not match.');
+  if (username.length < 3)                  return showAuthErr('reg-error', 'Username must be at least 3 characters.');
+  if (!/^[a-zA-Z0-9_]+$/.test(username))   return showAuthErr('reg-error', 'Username: letters, numbers, underscores only.');
+  if (password.length < 6)                  return showAuthErr('reg-error', 'Password must be at least 6 characters.');
+  if (password !== confirm)                 return showAuthErr('reg-error', 'Passwords do not match.');
 
   const users = getUsers();
-  if (users[username.toLowerCase()]) return showAuthError('reg-error', 'This username is already taken.');
+  if (users[username.toLowerCase()])        return showAuthErr('reg-error', 'That username is already taken.');
+  if (Object.values(users).some(u => u.email.toLowerCase() === email.toLowerCase()))
+                                             return showAuthErr('reg-error', 'An account with this email exists.');
 
-  // Check email not already used
-  const emailTaken = Object.values(users).some(u => u.email.toLowerCase() === email.toLowerCase());
-  if (emailTaken) return showAuthError('reg-error', 'An account with this email already exists.');
-
-  // Save user (simple hash simulation — NOT secure for production)
-  users[username.toLowerCase()] = {
-    username,
-    email,
-    password: btoa(password), // basic encoding, not real security
-    joined: new Date().toISOString()
-  };
+  users[username.toLowerCase()] = { username, email, password: btoa(password), joined: new Date().toISOString() };
   saveUsers(users);
-
-  // Auto-login
-  const userObj = { username, email };
-  setCurrentUser(userObj);
+  setCurrentUser({ username, email });
   refreshLoginPage();
-  renderAllCommentForms();
+  updateModalCommentForm();
+  updateCardCounts();
   showToast('Account created! Welcome, ' + username + ' 🎉', 'success');
-  document.getElementById('reg-error').style.display = 'none';
 }
 
 // ====== LOGIN ======
@@ -225,134 +249,203 @@ function handleLogin(e) {
   e.preventDefault();
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
-  const users = getUsers();
-  const record = users[username.toLowerCase()];
+  const users    = getUsers();
+  const rec      = users[username.toLowerCase()];
 
-  if (!record) return showAuthError('login-error', 'No account found with that username.');
-  if (atob(record.password) !== password) return showAuthError('login-error', 'Incorrect password.');
+  if (!rec)                        return showAuthErr('login-error', 'No account found with that username.');
+  if (atob(rec.password) !== password) return showAuthErr('login-error', 'Incorrect password.');
 
-  const userObj = { username: record.username, email: record.email };
-  setCurrentUser(userObj);
+  setCurrentUser({ username: rec.username, email: rec.email });
   refreshLoginPage();
-  renderAllCommentForms();
-  showToast('Welcome back, ' + record.username + '!', 'success');
+  updateModalCommentForm();
+  updateCardCounts();
+  showToast('Welcome back, ' + rec.username + '!', 'success');
   document.getElementById('login-error').style.display = 'none';
 }
 
 // ====== LOGOUT ======
 function handleLogout() {
-  storage.remove('portfolio-current-user');
+  store.del('portfolio-current-user');
   refreshLoginPage();
-  renderAllCommentForms();
-  showToast('Logged out successfully.', 'success');
+  updateModalCommentForm();
+  showToast('Logged out.', 'success');
+}
+
+// ====== BLOG POST DATA ======
+const POSTS = {
+  1: {
+    tag: 'Astronomy', date: 'Jan 12, 2025',
+    title: 'Why I Fell in Love with the Stars',
+    body: `<p>Ever since I was a child in Dharan, I would lie on the roof and stare up at the Milky Way stretching across the sky. Nepal's clear mountain air gives you something most city-dwellers never experience — a genuinely dark sky. That's where it started. The moment I realized those faint smudges weren't just stars but entire galaxies billions of light-years away, something clicked. Physics stopped being equations and became a language the universe was speaking directly to me.</p>
+<p>Qualifying for IJSO opened my eyes to how competitive and beautiful the world of science olympiads is. But more than the competition, it was the conversations — with peers who cared about dark matter, neutron stars, and gravitational waves the same way I did. Science is lonely until it isn't.</p>
+<p>I still remember the first time I looked through a proper telescope. The rings of Saturn didn't look real — they looked like a sticker someone had placed on the eyepiece. That cognitive dissonance, that clash between what you know intellectually and what your eyes refuse to accept, is the purest feeling I've ever had in science. I've been chasing it ever since.</p>`
+  },
+  2: {
+    tag: 'Reflection', date: 'Feb 3, 2025',
+    title: 'What NYPT Taught Me About Arguing',
+    body: `<p>The Nepal Young Physicists' Tournament is unlike any science competition I'd been in. You don't just solve problems — you defend solutions in front of opponents who actively try to dismantle your reasoning. It's brutal and brilliant in equal measure. My first fight, I stumbled. My physics was correct but my communication was scattered. I learned that knowing something and being able to explain it under pressure are completely different skills.</p>
+<p>What I took from NYPT wasn't just physics intuition. It was intellectual humility. Sometimes your opponent points out a flaw in your model and the honest thing to do is concede. That's not weakness — that's science.</p>
+<p>There's also something uniquely satisfying about winning an argument with a better physical model. Not winning because you spoke louder or longer, but because your framework genuinely captured more of reality. NYPT trained me to care about that distinction. I think every student who wants to be a scientist should go through something like it.</p>`
+  },
+  3: {
+    tag: 'Life', date: 'Feb 20, 2025',
+    title: 'Moving to Kathmandu: A Culture Shock',
+    body: `<p>Leaving Dharan for Trinity International College in Kathmandu felt like jumping from a quiet lake into an ocean. The pace is different, the people are different, and the expectations are different. For the first few weeks I missed the slow mornings, the familiar streets, the mountains that framed every sunrise. Kathmandu doesn't give you that — it gives you chaos and opportunity in the same breath.</p>
+<p>But I'm adapting. I've found pockets of calm in the city — rooftops, small coffee shops, early-morning walks before the traffic wakes up. And I've found that ambition is contagious when you're surrounded by people who take their futures seriously. I'm grateful for the discomfort. It means I'm growing.</p>
+<p>Dharan shaped who I am. But Kathmandu is shaping who I'm becoming. Both cities live in me now, and I think that dual citizenship — quiet roots, loud ambitions — is exactly the kind of tension that makes a person interesting.</p>`
+  }
+};
+
+// ====== BLOG GRID ======
+function updateCardCounts() {
+  [1, 2, 3].forEach(id => {
+    const el = document.getElementById('card-count-' + id);
+    if (el) {
+      const n = getComments(id).length;
+      el.textContent = n + (n === 1 ? ' comment' : ' comments');
+    }
+  });
+}
+
+// ====== OPEN / CLOSE POST MODAL ======
+let currentPostId = null;
+
+function openPost(id) {
+  currentPostId = id;
+  const post = POSTS[id];
+  if (!post) return;
+
+  const overlay = document.getElementById('blog-modal-overlay');
+  const panel   = document.getElementById('blog-modal-panel');
+  const content = document.getElementById('blog-modal-content');
+  const scroll  = document.getElementById('blog-modal-scroll');
+
+  content.innerHTML = `
+    <span class="modal-post-tag">${post.tag}</span>
+    <span class="modal-post-date">${post.date}</span>
+    <h2 class="modal-post-title">${post.title}</h2>
+    <div class="modal-post-body">${post.body}</div>
+  `;
+
+  renderModalComments(id);
+  renderModalCommentForm(id);
+
+  overlay.classList.add('open');
+  panel.classList.add('open');
+  scroll.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closePost() {
+  const overlay = document.getElementById('blog-modal-overlay');
+  const panel   = document.getElementById('blog-modal-panel');
+  overlay.classList.remove('open');
+  panel.classList.remove('open');
+  document.body.style.overflow = '';
+  currentPostId = null;
+  updateCardCounts();
+}
+
+function closePostOverlay(e) {
+  // Only close if clicking directly on the dark overlay, not the panel
+  if (e.target === document.getElementById('blog-modal-overlay')) {
+    closePost();
+  }
 }
 
 // ====== COMMENTS ======
 function getComments(postId) {
-  try { return JSON.parse(storage.get('blog-comments-' + postId) || '[]'); } catch(e) { return []; }
+  try { return JSON.parse(store.get('blog-comments-' + postId) || '[]'); } catch(e) { return []; }
+}
+function saveComments(postId, arr) { store.set('blog-comments-' + postId, JSON.stringify(arr)); }
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-function saveComments(postId, comments) {
-  storage.set('blog-comments-' + postId, JSON.stringify(comments));
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
 
-function formatCommentDate(isoString) {
-  const d = new Date(isoString);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-function renderComments(postId) {
-  const list = document.getElementById('comments-' + postId);
-  const countEl = document.getElementById('count-' + postId);
+function renderModalComments(postId) {
+  const list  = document.getElementById('modal-comments-list');
+  const count = document.getElementById('modal-comment-count');
   if (!list) return;
-
   const comments = getComments(postId);
-  countEl.textContent = comments.length + (comments.length === 1 ? ' Comment' : ' Comments');
+  count.textContent = comments.length + (comments.length === 1 ? ' Comment' : ' Comments');
 
   if (comments.length === 0) {
     list.innerHTML = '';
     list.style.background = 'none';
     return;
   }
-
   list.style.background = 'var(--border)';
   list.innerHTML = comments.map(c => `
     <div class="comment-item">
       <div class="comment-header">
-        <div class="comment-avatar">${c.author.charAt(0)}</div>
-        <span class="comment-author">${escapeHtml(c.author)}</span>
-        <span class="comment-date">${formatCommentDate(c.date)}</span>
+        <div class="comment-avatar">${escHtml(c.author.charAt(0))}</div>
+        <span class="comment-author">${escHtml(c.author)}</span>
+        <span class="comment-date">${formatDate(c.date)}</span>
       </div>
-      <div class="comment-text">${escapeHtml(c.text)}</div>
+      <div class="comment-text">${escHtml(c.text)}</div>
     </div>
   `).join('');
 }
 
-function renderCommentForm(postId) {
-  const area = document.getElementById('comment-form-' + postId);
+function renderModalCommentForm(postId) {
+  const area = document.getElementById('modal-comment-form');
   if (!area) return;
   const user = getCurrentUser();
 
   if (user) {
     area.innerHTML = `
       <div class="comment-form-box">
-        <textarea id="comment-input-${postId}" placeholder="Share your thoughts..."></textarea>
+        <textarea id="modal-comment-textarea" placeholder="Share your thoughts on this post..."></textarea>
         <div class="comment-form-footer">
-          <span class="comment-logged-as">Commenting as <strong>${escapeHtml(user.username)}</strong></span>
-          <button class="btn btn-accent" onclick="submitComment(${postId})">Post Comment</button>
+          <span class="comment-logged-as">Commenting as <strong>${escHtml(user.username)}</strong></span>
+          <button class="btn btn-accent" onclick="submitModalComment(${postId})">Post Comment</button>
         </div>
       </div>
     `;
   } else {
     area.innerHTML = `
       <div class="comment-login-prompt">
-        <p>Login or create an account to leave a comment.</p>
-        <button class="btn btn-accent" onclick="showPage('login')">Login / Register</button>
+        <p>Login or register to join the discussion.</p>
+        <button class="btn btn-accent" onclick="closePost(); showPage('login')">Login / Register</button>
       </div>
     `;
   }
 }
 
-function renderAllCommentForms() {
-  [1, 2, 3].forEach(id => {
-    renderComments(id);
-    renderCommentForm(id);
-  });
+function updateModalCommentForm() {
+  if (currentPostId) renderModalCommentForm(currentPostId);
 }
 
-function submitComment(postId) {
+function submitModalComment(postId) {
   const user = getCurrentUser();
   if (!user) { showToast('Please log in to comment.', 'error'); return; }
 
-  const input = document.getElementById('comment-input-' + postId);
-  const text = (input ? input.value : '').trim();
-  if (!text) { showToast('Comment cannot be empty.', 'error'); return; }
+  const ta   = document.getElementById('modal-comment-textarea');
+  const text = ta ? ta.value.trim() : '';
+  if (!text)          { showToast('Comment cannot be empty.', 'error'); return; }
   if (text.length > 1000) { showToast('Comment too long (max 1000 chars).', 'error'); return; }
 
   const comments = getComments(postId);
-  comments.push({
-    author: user.username,
-    text,
-    date: new Date().toISOString()
-  });
+  comments.push({ author: user.username, text, date: new Date().toISOString() });
   saveComments(postId, comments);
 
-  renderComments(postId);
-  renderCommentForm(postId);
+  renderModalComments(postId);
+  renderModalCommentForm(postId);
   showToast('Comment posted!', 'success');
 }
 
-function escapeHtml(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
+// ====== ESC KEY to close modal ======
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && currentPostId !== null) closePost();
+});
 
 // ====== INIT ======
 (function init() {
   refreshLoginPage();
-  renderAllCommentForms();
+  updateCardCounts();
 })();
