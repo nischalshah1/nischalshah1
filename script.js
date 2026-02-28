@@ -118,8 +118,8 @@ const ConstellationLoader = (function () {
   const FADE_OUT_MS    = 900;
 
   const PAGE_LABELS = {
-    home: 'Home', achievements: 'Achievements', skills: 'Skills & Tools',
-    about: 'About Me', contact: 'Contact', blog: 'The Nischal Times', login: 'Account'
+    home: 'Home', achievements: 'Timeline', skills: 'Skills & Tools',
+    about: 'About Me', games: 'Games', blog: 'The Nischal Times', login: 'Account'
   };
 
   let overlay, canvas, ctx, labelEl;
