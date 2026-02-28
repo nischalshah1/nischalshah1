@@ -406,8 +406,8 @@
     <div class="auth-right">
       <div class="auth-right-inner">
 
-        <!-- sliding pill toggle -->
-        <div class="auth-pill-row">
+        <!-- sliding pill toggle (hidden on forgot screen) -->
+        <div class="auth-pill-row" id="auth-pill-row">
           <div class="auth-pill-track">
             <div class="auth-pill-bg" id="auth-pill-bg"></div>
             <button class="auth-pill-btn active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
@@ -429,41 +429,17 @@
               <input class="auth-field-input" id="login-password" type="password" placeholder=" " required autocomplete="current-password">
               <label class="auth-field-label">Password</label>
               <div class="auth-field-line"></div>
+              <button type="button" class="eye-btn" onclick="toggleEye('login-password', this)" tabindex="-1">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
             </div>
             <div id="login-error" class="auth-err-box" style="display:none;"></div>
             <button class="auth-submit-btn" type="submit">Sign In <span>→</span></button>
           </form>
-          <p class="auth-switch-line">No account? <span onclick="switchAuthTab('register')">Create one free →</span></p>
-          <p class="auth-switch-line" style="margin-top:0.5rem;">
-            <span onclick="switchAuthTab('forgot')" style="color:var(--muted);font-size:0.62rem;">Forgot password?</span>
-          </p>
-        </div>
-
-        <!-- FORGOT PASSWORD FORM -->
-        <div id="auth-forgot-form" class="auth-form-panel" style="display:none;">
-          <h2 class="auth-heading">Reset Password</h2>
-          <p class="auth-subheading">Enter your username and choose a new password</p>
-          <form onsubmit="handleForgotPassword(event)" autocomplete="off">
-            <div class="auth-field-wrap">
-              <input class="auth-field-input" id="forgot-username" type="text" placeholder=" " required>
-              <label class="auth-field-label">Username</label>
-              <div class="auth-field-line"></div>
-            </div>
-            <div class="auth-field-wrap">
-              <input class="auth-field-input" id="forgot-newpass" type="password" placeholder=" " required>
-              <label class="auth-field-label">New Password (min 6 chars)</label>
-              <div class="auth-field-line"></div>
-            </div>
-            <div class="auth-field-wrap">
-              <input class="auth-field-input" id="forgot-confirm" type="password" placeholder=" " required>
-              <label class="auth-field-label">Confirm New Password</label>
-              <div class="auth-field-line"></div>
-            </div>
-            <div id="forgot-error" class="auth-err-box" style="display:none;"></div>
-            <div id="forgot-success" class="auth-success-box" style="display:none;">✓ Password updated! You can now sign in.</div>
-            <button class="auth-submit-btn" type="submit">Reset Password <span>→</span></button>
-          </form>
-          <p class="auth-switch-line">Remembered it? <span onclick="switchAuthTab('login')">Back to Sign In →</span></p>
+          <div class="auth-bottom-links">
+            <p class="auth-switch-line">No account? <span onclick="switchAuthTab('register')">Create one free →</span></p>
+            <p class="auth-switch-line"><span class="auth-forgot-link" onclick="switchAuthTab('forgot')">Forgot password?</span></p>
+          </div>
         </div>
 
         <!-- REGISTER FORM -->
@@ -485,16 +461,58 @@
               <input class="auth-field-input" id="reg-password" type="password" placeholder=" " required autocomplete="new-password">
               <label class="auth-field-label">Password (min 6 chars)</label>
               <div class="auth-field-line"></div>
+              <button type="button" class="eye-btn" onclick="toggleEye('reg-password', this)" tabindex="-1">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
             </div>
             <div class="auth-field-wrap">
               <input class="auth-field-input" id="reg-confirm" type="password" placeholder=" " required autocomplete="new-password">
               <label class="auth-field-label">Confirm Password</label>
               <div class="auth-field-line"></div>
+              <button type="button" class="eye-btn" onclick="toggleEye('reg-confirm', this)" tabindex="-1">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
             </div>
             <div id="reg-error" class="auth-err-box" style="display:none;"></div>
             <button class="auth-submit-btn" type="submit">Create Account <span>→</span></button>
           </form>
-          <p class="auth-switch-line">Already registered? <span onclick="switchAuthTab('login')">Sign in →</span></p>
+          <p class="auth-switch-line" style="margin-top:1.5rem;">Already registered? <span onclick="switchAuthTab('login')">Sign in →</span></p>
+        </div>
+
+        <!-- FORGOT PASSWORD — own distinct panel, no pill -->
+        <div id="auth-forgot-form" class="auth-form-panel" style="display:none;">
+          <button type="button" class="auth-back-btn" onclick="switchAuthTab('login')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Back to Sign In
+          </button>
+          <h2 class="auth-heading" style="margin-top:1.2rem;">Reset Password</h2>
+          <p class="auth-subheading">Enter your username and set a new password</p>
+          <form onsubmit="handleForgotPassword(event)" autocomplete="off">
+            <div class="auth-field-wrap">
+              <input class="auth-field-input" id="forgot-username" type="text" placeholder=" " required>
+              <label class="auth-field-label">Username</label>
+              <div class="auth-field-line"></div>
+            </div>
+            <div class="auth-field-wrap">
+              <input class="auth-field-input" id="forgot-newpass" type="password" placeholder=" " required>
+              <label class="auth-field-label">New Password (min 6 chars)</label>
+              <div class="auth-field-line"></div>
+              <button type="button" class="eye-btn" onclick="toggleEye('forgot-newpass', this)" tabindex="-1">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="auth-field-wrap">
+              <input class="auth-field-input" id="forgot-confirm" type="password" placeholder=" " required>
+              <label class="auth-field-label">Confirm New Password</label>
+              <div class="auth-field-line"></div>
+              <button type="button" class="eye-btn" onclick="toggleEye('forgot-confirm', this)" tabindex="-1">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div id="forgot-error" class="auth-err-box" style="display:none;"></div>
+            <div id="forgot-success" class="auth-success-box" style="display:none;">✓ Password updated! Redirecting to sign in…</div>
+            <button class="auth-submit-btn" type="submit">Reset Password <span>→</span></button>
+          </form>
         </div>
 
       </div>
@@ -515,7 +533,10 @@
         <div class="loggedin-status-pill"><span class="status-dot"></span>Active — comments unlocked on all posts</div>
         <div class="loggedin-btns">
           <button class="btn btn-accent" onclick="showPage('blog')">Read Blog →</button>
-          <button class="btn btn-danger" onclick="handleLogout()">Logout</button>
+          <button class="btn btn-danger" onclick="handleLogout()">Log Out</button>
+        </div>
+        <div class="loggedin-danger-zone">
+          <button class="loggedin-delete-btn" onclick="confirmDeleteAccount()">Delete Account</button>
         </div>
       </div>
     </div>
