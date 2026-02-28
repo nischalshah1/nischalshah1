@@ -91,60 +91,21 @@ document.addEventListener('click', e => {
 // ====================================================
 const ConstellationLoader = (function () {
 
-  // ── Full Orion constellation (normalised 0–1 coords) ──
-  // Based on real relative positions of named Orion stars
+  // ── Cassiopeia — classic W shape ──
+  // 5 main stars forming a clean upright W, centred on screen
   const STARS_DEF = [
-    // ── Core body ──
-    { x: 0.500, y: 0.130, name: 'Meissa',     r: 2.2 }, // 0  head / λ Ori
-    { x: 0.400, y: 0.310, name: 'Betelgeuse', r: 3.4 }, // 1  left shoulder / α Ori (giant — bigger dot)
-    { x: 0.610, y: 0.285, name: 'Bellatrix',  r: 2.5 }, // 2  right shoulder / γ Ori
-    { x: 0.440, y: 0.500, name: 'Alnitak',    r: 2.2 }, // 3  belt left / ζ Ori
-    { x: 0.500, y: 0.488, name: 'Alnilam',    r: 2.2 }, // 4  belt middle / ε Ori
-    { x: 0.560, y: 0.475, name: 'Mintaka',    r: 2.0 }, // 5  belt right / δ Ori
-    { x: 0.370, y: 0.700, name: 'Rigel',      r: 3.6 }, // 6  left foot / β Ori (brightest — biggest dot)
-    { x: 0.590, y: 0.715, name: 'Saiph',      r: 2.4 }, // 7  right foot / κ Ori
-
-    // ── Sword (hangs below belt) ──
-    { x: 0.462, y: 0.560, name: 'Sword N',    r: 1.6 }, // 8  42 Ori (north sword)
-    { x: 0.455, y: 0.610, name: 'Trapezium',  r: 2.0 }, // 9  θ1 Ori / Great Nebula centre
-    { x: 0.448, y: 0.660, name: 'Sword S',    r: 1.6 }, // 10 ι Ori (south sword)
-
-    // ── Shield (π stars, right/west side) ──
-    { x: 0.730, y: 0.255, name: 'π1 Ori',     r: 1.4 }, // 11
-    { x: 0.755, y: 0.330, name: 'π2 Ori',     r: 1.4 }, // 12
-    { x: 0.765, y: 0.410, name: 'π3 Ori',     r: 1.6 }, // 13
-    { x: 0.755, y: 0.490, name: 'π4 Ori',     r: 1.4 }, // 14
-    { x: 0.730, y: 0.560, name: 'π5 Ori',     r: 1.4 }, // 15
-    { x: 0.695, y: 0.625, name: 'π6 Ori',     r: 1.4 }, // 16
-
-    // ── Raised club / left arm ──
-    { x: 0.360, y: 0.185, name: 'μ Ori',      r: 1.5 }, // 17  upper arm
-    { x: 0.285, y: 0.155, name: 'ξ Ori',      r: 1.4 }, // 18  club tip
-    { x: 0.215, y: 0.195, name: 'χ1 Ori',     r: 1.3 }, // 19  club far tip
-
-    // ── η Ori (between Bellatrix and belt) ──
-    { x: 0.585, y: 0.385, name: 'η Ori',      r: 1.4 }, // 20
+    { x: 0.18, y: 0.68, name: 'Segin',     r: 2.2 }, // 0  ε Cas — far left, lower
+    { x: 0.34, y: 0.32, name: 'Ruchbah',   r: 2.6 }, // 1  δ Cas — left peak
+    { x: 0.50, y: 0.62, name: 'Gamma Cas', r: 3.2 }, // 2  γ Cas — centre valley (brightest)
+    { x: 0.66, y: 0.32, name: 'Schedar',   r: 2.8 }, // 3  α Cas — right peak
+    { x: 0.82, y: 0.68, name: 'Caph',      r: 2.4 }, // 4  β Cas — far right, lower
   ];
 
   const EDGES_DEF = [
-    // Head & shoulders
-    [0, 1], [0, 2],
-    // Shoulder to shoulder (faint cross-brace)
-    [1, 2],
-    // Shoulders down to belt
-    [1, 3],          // Betelgeuse → Alnitak
-    [2, 20], [20, 5], // Bellatrix → η Ori → Mintaka
-    // Belt
-    [3, 4], [4, 5],
-    // Belt down to feet
-    [3, 6],          // Alnitak → Rigel
-    [5, 7],          // Mintaka → Saiph
-    // Sword
-    [3, 8], [8, 9], [9, 10],
-    // Shield arc
-    [2, 11], [11, 12], [12, 13], [13, 14], [14, 15], [15, 16],
-    // Raised arm / club
-    [1, 17], [17, 18], [18, 19],
+    [0, 1],  // left base to left peak
+    [1, 2],  // left peak down to centre
+    [2, 3],  // centre up to right peak
+    [3, 4],  // right peak down to right base
   ];
 
   // timings (ms)
@@ -195,8 +156,8 @@ const ConstellationLoader = (function () {
   }
 
   function buildScene() {
-    const scale = Math.min(W, H) * 0.62;
-    const ox = W * 0.5, oy = H * 0.46;
+    const scale = Math.min(W, H) * 0.75;
+    const ox = W * 0.5, oy = H * 0.48;
 
     stars = STARS_DEF.map(s => ({
       x: ox + (s.x - 0.5) * scale,
@@ -495,22 +456,35 @@ function refreshLoginPage() {
 
 // ====== AUTH TABS ======
 function switchAuthTab(tab) {
-  const lf = document.getElementById('auth-login-form');
-  const rf = document.getElementById('auth-register-form');
-  const tl = document.getElementById('tab-login');
-  const tr = document.getElementById('tab-register');
+  const lf   = document.getElementById('auth-login-form');
+  const rf   = document.getElementById('auth-register-form');
+  const ff   = document.getElementById('auth-forgot-form');
+  const tl   = document.getElementById('tab-login');
+  const tr   = document.getElementById('tab-register');
   const pill = document.getElementById('auth-pill-bg');
 
+  // Hide all panels first
+  lf.style.display = 'none';
+  rf.style.display = 'none';
+  if (ff) ff.style.display = 'none';
+
   if (tab === 'login') {
-    lf.style.display = ''; rf.style.display = 'none';
+    lf.style.display = '';
     tl.classList.add('active'); tr.classList.remove('active');
     if (pill) pill.classList.remove('right');
     document.getElementById('login-error').style.display = 'none';
-  } else {
-    lf.style.display = 'none'; rf.style.display = '';
+  } else if (tab === 'register') {
+    rf.style.display = '';
     tl.classList.remove('active'); tr.classList.add('active');
     if (pill) pill.classList.add('right');
     document.getElementById('reg-error').style.display = 'none';
+  } else if (tab === 'forgot') {
+    if (ff) ff.style.display = '';
+    // Neither pill active
+    tl.classList.remove('active'); tr.classList.remove('active');
+    if (pill) pill.classList.remove('right');
+    document.getElementById('forgot-error').style.display = 'none';
+    document.getElementById('forgot-success').style.display = 'none';
   }
 }
 
@@ -547,7 +521,38 @@ function handleRegister(e) {
   showToast('Account created! Welcome, ' + username + ' 🎉', 'success');
 }
 
-// ====== LOGIN ======
+// ====== FORGOT PASSWORD ======
+function handleForgotPassword(e) {
+  e.preventDefault();
+  const username = document.getElementById('forgot-username').value.trim();
+  const newpass  = document.getElementById('forgot-newpass').value;
+  const confirm  = document.getElementById('forgot-confirm').value;
+  const errEl    = document.getElementById('forgot-error');
+  const okEl     = document.getElementById('forgot-success');
+
+  errEl.style.display = 'none';
+  okEl.style.display  = 'none';
+
+  const users = getUsers();
+  const key   = username.toLowerCase();
+
+  if (!users[key])          { errEl.textContent = 'No account found with that username.'; errEl.style.display = 'block'; return; }
+  if (newpass.length < 6)   { errEl.textContent = 'Password must be at least 6 characters.'; errEl.style.display = 'block'; return; }
+  if (newpass !== confirm)  { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
+
+  users[key].password = btoa(newpass);
+  saveUsers(users);
+
+  okEl.style.display = 'block';
+  document.getElementById('forgot-username').value = '';
+  document.getElementById('forgot-newpass').value  = '';
+  document.getElementById('forgot-confirm').value  = '';
+
+  // Auto-switch back to login after 2s
+  setTimeout(() => switchAuthTab('login'), 2000);
+}
+
+
 function handleLogin(e) {
   e.preventDefault();
   const username = document.getElementById('login-username').value.trim();
@@ -746,24 +751,30 @@ function renderModalComments(postId) {
   const count = document.getElementById('modal-comment-count');
   if (!list) return;
   const comments = getComments(postId);
+  const me = getCurrentUser();
   count.textContent = comments.length + (comments.length === 1 ? ' Comment' : ' Comments');
 
   if (comments.length === 0) {
-    list.innerHTML = '';
-    list.style.background = 'none';
+    list.innerHTML = '<div style="padding:1.5rem;font-size:0.72rem;color:var(--muted);font-style:italic;">No comments yet — be the first to share your thoughts.</div>';
+    list.style.background = 'var(--surface)';
+    list.style.border = '1px solid var(--border)';
     return;
   }
   list.style.background = 'var(--border)';
-  list.innerHTML = comments.map(c => `
-    <div class="comment-item">
+  list.style.border = 'none';
+  list.innerHTML = comments.map(c => {
+    const isMe = me && me.username.toLowerCase() === c.author.toLowerCase();
+    return `
+    <div class="comment-item${isMe ? ' comment-mine' : ''}">
       <div class="comment-header">
-        <div class="comment-avatar">${escHtml(c.author.charAt(0))}</div>
+        <div class="comment-avatar" style="${isMe ? 'background:var(--surface2);border-color:var(--accent);' : ''}">${escHtml(c.author.charAt(0).toUpperCase())}</div>
         <span class="comment-author">${escHtml(c.author)}</span>
+        ${isMe ? '<span class="comment-you-badge">you</span>' : ''}
         <span class="comment-date">${formatDate(c.date)}</span>
       </div>
       <div class="comment-text">${escHtml(c.text)}</div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function renderModalCommentForm(postId) {
