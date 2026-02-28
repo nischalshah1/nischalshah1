@@ -206,6 +206,36 @@
             <button class="auth-submit-btn" type="submit">Sign In <span>→</span></button>
           </form>
           <p class="auth-switch-line">No account? <span onclick="switchAuthTab('register')">Create one free →</span></p>
+          <p class="auth-switch-line" style="margin-top:0.5rem;">
+            <span onclick="switchAuthTab('forgot')" style="color:var(--muted);font-size:0.62rem;">Forgot password?</span>
+          </p>
+        </div>
+
+        <!-- FORGOT PASSWORD FORM -->
+        <div id="auth-forgot-form" class="auth-form-panel" style="display:none;">
+          <h2 class="auth-heading">Reset Password</h2>
+          <p class="auth-subheading">Enter your username and choose a new password</p>
+          <form onsubmit="handleForgotPassword(event)" autocomplete="off">
+            <div class="auth-field-wrap">
+              <input class="auth-field-input" id="forgot-username" type="text" placeholder=" " required>
+              <label class="auth-field-label">Username</label>
+              <div class="auth-field-line"></div>
+            </div>
+            <div class="auth-field-wrap">
+              <input class="auth-field-input" id="forgot-newpass" type="password" placeholder=" " required>
+              <label class="auth-field-label">New Password (min 6 chars)</label>
+              <div class="auth-field-line"></div>
+            </div>
+            <div class="auth-field-wrap">
+              <input class="auth-field-input" id="forgot-confirm" type="password" placeholder=" " required>
+              <label class="auth-field-label">Confirm New Password</label>
+              <div class="auth-field-line"></div>
+            </div>
+            <div id="forgot-error" class="auth-err-box" style="display:none;"></div>
+            <div id="forgot-success" class="auth-success-box" style="display:none;">✓ Password updated! You can now sign in.</div>
+            <button class="auth-submit-btn" type="submit">Reset Password <span>→</span></button>
+          </form>
+          <p class="auth-switch-line">Remembered it? <span onclick="switchAuthTab('login')">Back to Sign In →</span></p>
         </div>
 
         <!-- REGISTER FORM -->
