@@ -919,7 +919,7 @@ body.theme-forest header { background: rgba(6,26,8,0.95); }
 
 /* ── CENTER LEAD COLUMN ── */
 .np-col-lead {
-  padding: 0 0 0 0;
+  padding: 0 0 0 1.5rem;
   min-width: 0;
 }
 
