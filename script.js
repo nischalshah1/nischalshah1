@@ -834,3 +834,74 @@ document.addEventListener('keydown', e => {
   refreshLoginPage();
   updateCardCounts();
 })();
+
+// ====================================================
+// TIMELINE SCROLL ANIMATION
+// ====================================================
+const TimelineAnimator = (function () {
+
+  let observed = false;
+
+  function init() {
+    const tl = document.getElementById('timeline');
+    if (!tl || observed) return;
+    observed = true;
+
+    // Kick off the vertical line grow
+    tl.classList.add('tl-animate');
+
+    const items    = tl.querySelectorAll('.tl-item');
+    const years    = tl.querySelectorAll('.tl-year-marker');
+    const endCap   = tl.querySelector('.tl-end-cap');
+
+    // Collect everything in DOM order with type tagging
+    const allEls = [...tl.children].map(el => {
+      if (el.classList.contains('tl-item'))        return { el, type: 'item' };
+      if (el.classList.contains('tl-year-marker')) return { el, type: 'year' };
+      if (el.classList.contains('tl-end-cap'))     return { el, type: 'end' };
+      return null;
+    }).filter(Boolean);
+
+    // IntersectionObserver — fire when each element enters viewport
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('tl-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    allEls.forEach(({ el }) => io.observe(el));
+  }
+
+  // Re-run when switching to achievements tab
+  function reset() {
+    observed = false;
+    const tl = document.getElementById('timeline');
+    if (!tl) return;
+    tl.classList.remove('tl-animate');
+    tl.querySelectorAll('.tl-item, .tl-year-marker, .tl-end-cap')
+      .forEach(el => el.classList.remove('tl-visible'));
+    // Small delay so CSS resets before re-animating
+    setTimeout(init, 80);
+  }
+
+  return { init, reset };
+})();
+
+// Hook into showPage to trigger timeline when navigating to achievements
+const _tlOrigShowPage = showPage;
+showPage = function (page) {
+  _tlOrigShowPage(page);
+  if (page === 'achievements') {
+    setTimeout(() => TimelineAnimator.reset(), 120);
+  }
+};
+
+// Also fire on first load if starting on achievements (unlikely but safe)
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('page-achievements').classList.contains('active')) {
+    TimelineAnimator.init();
+  }
+});
