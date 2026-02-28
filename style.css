@@ -539,6 +539,17 @@ body.theme-forest header { background: rgba(6,26,8,0.95); }
   animation: fadeSlideIn 0.2s ease;
 }
 
+.auth-success-box {
+  background: rgba(39,174,96,0.08);
+  border-left: 2px solid var(--success);
+  color: var(--success);
+  font-size: 0.7rem;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.03em;
+  animation: fadeSlideIn 0.2s ease;
+}
+
 .auth-submit-btn {
   width: 100%;
   padding: 0.9rem 1.5rem;
@@ -1225,6 +1236,20 @@ body.theme-forest header { background: rgba(6,26,8,0.95); }
   animation: fadeIn 0.25s ease;
 }
 .comment-item:hover { background: var(--surface2); }
+
+.comment-item.comment-mine {
+  border-left: 2px solid var(--accent2);
+}
+
+.comment-you-badge {
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  border: 1px solid rgba(196,149,106,0.4);
+  padding: 0.1rem 0.4rem;
+  border-radius: 100px;
+}
 
 .comment-header {
   display: flex;
