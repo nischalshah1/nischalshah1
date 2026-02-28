@@ -345,8 +345,44 @@
     </div>
   </section>
 </div>
+<!-- ====== GAMES ====== -->
+<div id="page-games" class="page">
+  <section>
+    <div class="section-label">06 — Play</div>
+    <h2 class="section-title">Mini<br><em style="font-style:italic;color:var(--accent2);">Games</em></h2>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:2.5rem;line-height:1.8;">Two browser games built around astronomy. Click a game to launch it.</p>
 
-<!-- ====== CONTACT ====== -->
+    <!-- Game selection hub -->
+    <div id="games-hub">
+      <div class="games-grid">
+
+        <button class="game-card" onclick="Games.open('starmapper')">
+          <div class="game-card-icon">⭐</div>
+          <div class="game-card-tag">Puzzle · Astronomy</div>
+          <div class="game-card-name">Star Mapper</div>
+          <div class="game-card-desc">A constellation appears as unlabelled dots. Connect them in the correct order to trace the shape. Each round a new constellation — how many can you map?</div>
+          <div class="game-card-cta">Play Now →</div>
+          <div class="game-card-hover-line"></div>
+        </button>
+
+        <button class="game-card" onclick="Games.open('asteroid')">
+          <div class="game-card-icon">☄️</div>
+          <div class="game-card-tag">Action · Space</div>
+          <div class="game-card-name">Asteroid Defender</div>
+          <div class="game-card-desc">Asteroids are hurtling toward Earth. Move your telescope and click to observe (destroy) them before they hit the ground. Red ones are fast — watch out!</div>
+          <div class="game-card-cta">Play Now →</div>
+          <div class="game-card-hover-line"></div>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Active game renders here -->
+    <div id="game-container"></div>
+
+  </section>
+</div>
+<!-- ====== CONTACT ====== 
 <div id="page-contact" class="page">
   <section>
     <div class="section-label">05 — Connect</div>
@@ -382,7 +418,7 @@
     </div>
   </section>
 </div>
-
+-->
 <!-- ====== LOGIN ====== -->
 <div id="page-login" class="page">
 
