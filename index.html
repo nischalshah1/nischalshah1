@@ -565,97 +565,96 @@
       </div>
     </div>
 
-    <!-- BROADSHEET BODY -->
-    <div class="np-body">
+    <!-- BROADSHEET BODY — new editorial layout -->
+    <div class="blog-editorial">
 
-      <!-- LEFT COLUMN: index / latest ticker -->
-      <div class="np-col np-col-index">
-        <div class="np-index-label">In This Edition</div>
-        <ol class="np-index-list">
-          <li class="active" onclick="selectPost(1)">
-            <span class="np-idx-n">I.</span>
-            <span class="np-idx-title">Why I Fell in Love with the Stars</span>
-          </li>
-          <li onclick="selectPost(2)">
-            <span class="np-idx-n">II.</span>
-            <span class="np-idx-title">What NYPT Taught Me About Arguing</span>
-          </li>
-          <li onclick="selectPost(3)">
-            <span class="np-idx-n">III.</span>
-            <span class="np-idx-title">Moving to Kathmandu: A Culture Shock</span>
-          </li>
-        </ol>
-        <div class="np-index-divider"></div>
-        <div class="np-index-note">
-          "Science is the poetry of reality."<br>
-          <em>— Richard Dawkins</em>
+      <!-- ── FEATURED HERO POST ── -->
+      <div class="blog-hero" onclick="openPost(1)">
+        <div class="blog-hero-bg">
+          <canvas class="blog-star-canvas" id="blog-star-bg"></canvas>
         </div>
-        <div class="np-index-divider"></div>
-        <div class="np-comment-ticker">
-          <div class="np-ticker-label">Reader Comments</div>
-          <div class="np-ticker-count" id="ticker-total">Loading…</div>
+        <div class="blog-hero-inner">
+          <div class="blog-hero-left">
+            <div class="blog-hero-meta">
+              <span class="blog-cat blog-cat-1">Astronomy</span>
+              <span class="blog-hero-num">01</span>
+            </div>
+            <h2 class="blog-hero-title">Why I Fell in Love<br>with the <em>Stars</em></h2>
+            <p class="blog-hero-excerpt">Ever since I was a child in Dharan, I would lie on the roof and stare up at the Milky Way. That's where it started — the moment I realised those faint smudges were entire galaxies billions of light-years away.</p>
+            <div class="blog-hero-footer">
+              <span class="blog-meta-date">Jan 12, 2025</span>
+              <span class="blog-meta-dot">·</span>
+              <span class="blog-meta-read">5 min read</span>
+              <span class="blog-meta-dot">·</span>
+              <span class="blog-meta-comments" id="card-count-1">0 comments</span>
+            </div>
+          </div>
+          <div class="blog-hero-cta">
+            <div class="blog-hero-cta-ring">
+              <svg viewBox="0 0 60 60" class="blog-hero-cta-svg">
+                <circle cx="30" cy="30" r="28" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3" class="blog-cta-dash"/>
+              </svg>
+              <span class="blog-hero-cta-text">Read<br>Story</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="np-col-rule"></div>
+      <!-- ── TWO SMALLER CARDS ── -->
+      <div class="blog-cards-row">
 
-      <!-- CENTER COLUMN: lead story + two below -->
-      <div class="np-col np-col-lead">
-        <div class="np-story np-story-lead" data-post="1" onclick="openPost(1)">
-          <div class="np-story-kicker">Lead Story · Astronomy</div>
-          <h2 class="np-story-headline np-headline-lead">Why I Fell in<br>Love with<br>the Stars</h2>
-          <div class="np-story-rule"></div>
-          <p class="np-story-body np-dropcap">Ever since I was a child in Dharan, I would lie on the roof and stare up at the Milky Way stretching across the sky. Nepal's clear mountain air gives you something most city-dwellers never experience — a genuinely dark sky. That's where it started. The moment I realized those faint smudges weren't just stars but entire galaxies billions of light-years away, something clicked entirely.</p>
-          <p class="np-story-body">Physics stopped being equations and became a language the universe was speaking directly to me. Qualifying for IJSO opened my eyes to how competitive and beautiful the world of science olympiads truly is.</p>
-          <div class="np-story-footer">
-            <span class="np-story-date">Jan 12, 2025</span>
-            <span class="np-story-read">Continue Reading →</span>
-            <span class="np-story-comments" id="card-count-1">0 comments</span>
+        <div class="blog-card" onclick="openPost(2)">
+          <div class="blog-card-num">02</div>
+          <div class="blog-card-inner">
+            <span class="blog-cat blog-cat-2">Physics</span>
+            <h3 class="blog-card-title">What NYPT Taught Me About <em>Arguing</em></h3>
+            <p class="blog-card-excerpt">You don't just solve problems — you defend solutions against opponents who actively try to dismantle your reasoning. Brutal and brilliant in equal measure.</p>
+            <div class="blog-card-footer">
+              <div class="blog-meta-row">
+                <span class="blog-meta-date">Feb 3, 2025</span>
+                <span class="blog-meta-dot">·</span>
+                <span class="blog-meta-read">4 min read</span>
+                <span class="blog-meta-dot">·</span>
+                <span class="blog-meta-comments" id="card-count-2">0 comments</span>
+              </div>
+              <div class="blog-card-arrow">→</div>
+            </div>
           </div>
+          <div class="blog-card-hover-line"></div>
         </div>
 
-        <div class="np-below-rule"></div>
-
-        <!-- Two smaller stories in a row below the lead -->
-        <div class="np-below-grid" id="np-below-grid">
-
-          <div class="np-story np-story-small" data-post="2" onclick="openPost(2)">
-            <div class="np-story-kicker">Reflection · Physics</div>
-            <h3 class="np-story-headline np-headline-small">What NYPT Taught Me About Arguing</h3>
-            <div class="np-story-rule"></div>
-            <p class="np-story-body">The Nepal Young Physicists' Tournament is unlike any science competition I'd been in. You don't just solve problems — you defend solutions in front of opponents who actively try to dismantle your reasoning. It's brutal and brilliant in equal measure.</p>
-            <div class="np-story-footer">
-              <span class="np-story-date">Feb 3, 2025</span>
-              <span class="np-story-read">Read →</span>
-              <span class="np-story-comments" id="card-count-2">0 comments</span>
+        <div class="blog-card" onclick="openPost(3)">
+          <div class="blog-card-num">03</div>
+          <div class="blog-card-inner">
+            <span class="blog-cat blog-cat-3">Life</span>
+            <h3 class="blog-card-title">Moving to Kathmandu: A <em>Culture Shock</em></h3>
+            <p class="blog-card-excerpt">Leaving Dharan for Trinity International College felt like jumping from a quiet lake into an ocean. The pace, the people, the expectations — all different.</p>
+            <div class="blog-card-footer">
+              <div class="blog-meta-row">
+                <span class="blog-meta-date">Feb 20, 2025</span>
+                <span class="blog-meta-dot">·</span>
+                <span class="blog-meta-read">4 min read</span>
+                <span class="blog-meta-dot">·</span>
+                <span class="blog-meta-comments" id="card-count-3">0 comments</span>
+              </div>
+              <div class="blog-card-arrow">→</div>
             </div>
           </div>
+          <div class="blog-card-hover-line"></div>
+        </div>
 
-          <div class="np-below-col-rule"></div>
+      </div><!-- /blog-cards-row -->
 
-          <div class="np-story np-story-small" data-post="3" onclick="openPost(3)">
-            <div class="np-story-kicker">Life · Kathmandu</div>
-            <h3 class="np-story-headline np-headline-small">Moving to Kathmandu: A Culture Shock</h3>
-            <div class="np-story-rule"></div>
-            <p class="np-story-body">Leaving Dharan for Trinity International College in Kathmandu felt like jumping from a quiet lake into an ocean. The pace is different, the people are different, and the expectations are entirely different. For the first few weeks I missed the mountains.</p>
-            <div class="np-story-footer">
-              <span class="np-story-date">Feb 20, 2025</span>
-              <span class="np-story-read">Read →</span>
-              <span class="np-story-comments" id="card-count-3">0 comments</span>
-            </div>
-          </div>
-
-        </div><!-- /np-below-grid -->
+      <!-- ── BOTTOM BAR ── -->
+      <div class="blog-bottom-bar">
+        <div class="blog-bottom-quote">"Science is the poetry of reality." <em>— Richard Dawkins</em></div>
+        <div class="blog-bottom-ticker">
+          <span class="blog-bottom-ticker-label">Total Reactions</span>
+          <span class="blog-bottom-ticker-count" id="ticker-total">—</span>
+        </div>
       </div>
 
-
-
-    </div><!-- /np-body -->
-
-    <!-- FOOTER RULE -->
-    <div class="np-footer-rule">
-      <span>— End of Edition —</span>
-    </div>
+    </div><!-- /blog-editorial -->
 
   </div><!-- /newspaper -->
 </div>
