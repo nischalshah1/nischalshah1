@@ -91,21 +91,39 @@ document.addEventListener('click', e => {
 // ====================================================
 const ConstellationLoader = (function () {
 
-  // ── Cassiopeia — classic W shape ──
-  // 5 main stars forming a clean upright W, centred on screen
+  // ── Full Orion constellation ──
   const STARS_DEF = [
-    { x: 0.18, y: 0.68, name: 'Segin',     r: 2.2 }, // 0  ε Cas — far left, lower
-    { x: 0.34, y: 0.32, name: 'Ruchbah',   r: 2.6 }, // 1  δ Cas — left peak
-    { x: 0.50, y: 0.62, name: 'Gamma Cas', r: 3.2 }, // 2  γ Cas — centre valley (brightest)
-    { x: 0.66, y: 0.32, name: 'Schedar',   r: 2.8 }, // 3  α Cas — right peak
-    { x: 0.82, y: 0.68, name: 'Caph',      r: 2.4 }, // 4  β Cas — far right, lower
+    { x: 0.500, y: 0.130, name: 'Meissa',     r: 2.2 },
+    { x: 0.400, y: 0.310, name: 'Betelgeuse', r: 3.4 },
+    { x: 0.610, y: 0.285, name: 'Bellatrix',  r: 2.5 },
+    { x: 0.440, y: 0.500, name: 'Alnitak',    r: 2.2 },
+    { x: 0.500, y: 0.488, name: 'Alnilam',    r: 2.2 },
+    { x: 0.560, y: 0.475, name: 'Mintaka',    r: 2.0 },
+    { x: 0.370, y: 0.700, name: 'Rigel',      r: 3.6 },
+    { x: 0.590, y: 0.715, name: 'Saiph',      r: 2.4 },
+    { x: 0.462, y: 0.560, name: 'Sword N',    r: 1.6 },
+    { x: 0.455, y: 0.610, name: 'Trapezium',  r: 2.0 },
+    { x: 0.448, y: 0.660, name: 'Sword S',    r: 1.6 },
+    { x: 0.730, y: 0.255, name: 'π1 Ori',     r: 1.4 },
+    { x: 0.755, y: 0.330, name: 'π2 Ori',     r: 1.4 },
+    { x: 0.765, y: 0.410, name: 'π3 Ori',     r: 1.6 },
+    { x: 0.755, y: 0.490, name: 'π4 Ori',     r: 1.4 },
+    { x: 0.730, y: 0.560, name: 'π5 Ori',     r: 1.4 },
+    { x: 0.695, y: 0.625, name: 'π6 Ori',     r: 1.4 },
+    { x: 0.360, y: 0.185, name: 'μ Ori',      r: 1.5 },
+    { x: 0.285, y: 0.155, name: 'ξ Ori',      r: 1.4 },
+    { x: 0.215, y: 0.195, name: 'χ1 Ori',     r: 1.3 },
+    { x: 0.585, y: 0.385, name: 'η Ori',      r: 1.4 },
   ];
 
   const EDGES_DEF = [
-    [0, 1],  // left base to left peak
-    [1, 2],  // left peak down to centre
-    [2, 3],  // centre up to right peak
-    [3, 4],  // right peak down to right base
+    [0,1],[0,2],[1,2],
+    [1,3],[2,20],[20,5],
+    [3,4],[4,5],
+    [3,6],[5,7],
+    [3,8],[8,9],[9,10],
+    [2,11],[11,12],[12,13],[13,14],[14,15],[15,16],
+    [1,17],[17,18],[18,19],
   ];
 
   // timings (ms)
@@ -117,7 +135,7 @@ const ConstellationLoader = (function () {
   const FADE_OUT_MS    = 600;  // CSS transition duration
 
   const PAGE_LABELS = {
-    home: 'Home', achievements: 'Achievements', skills: 'Skills & Tools',
+    home: 'Home', achievements: 'Timeline', skills: 'Skills & Tools',
     about: 'About Me', contact: 'Contact', blog: 'The Nischal Times', login: 'Account'
   };
 
@@ -156,8 +174,8 @@ const ConstellationLoader = (function () {
   }
 
   function buildScene() {
-    const scale = Math.min(W, H) * 0.75;
-    const ox = W * 0.5, oy = H * 0.48;
+    const scale = Math.min(W, H) * 0.62;
+    const ox = W * 0.5, oy = H * 0.46;
 
     stars = STARS_DEF.map(s => ({
       x: ox + (s.x - 0.5) * scale,
@@ -723,14 +741,14 @@ function selectPost(id) {
 
 
 // ====== BLOG GRID ======
-function updateCardCounts() {
+async function updateCardCounts() {
   let total = 0;
-  [1, 2, 3].forEach(id => {
-    const n = getComments(id).length;
+  await Promise.all([1, 2, 3].map(async id => {
+    const n = (await getComments(id)).length;
     total += n;
     const el = document.getElementById('card-count-' + id);
     if (el) el.textContent = n + (n === 1 ? ' comment' : ' comments');
-  });
+  }));
   const ticker = document.getElementById('ticker-total');
   if (ticker) ticker.textContent = total + (total === 1 ? ' comment' : ' comments');
 }
@@ -738,7 +756,7 @@ function updateCardCounts() {
 // ====== OPEN / CLOSE POST MODAL ======
 let currentPostId = null;
 
-function openPost(id) {
+async function openPost(id) {
   currentPostId = id;
   const post = POSTS[id];
   if (!post) return;
@@ -755,13 +773,13 @@ function openPost(id) {
     <div class="modal-post-body">${post.body}</div>
   `;
 
-  renderModalComments(id);
-  renderModalCommentForm(id);
-
   overlay.classList.add('open');
   panel.classList.add('open');
   scroll.scrollTop = 0;
   document.body.style.overflow = 'hidden';
+
+  await renderModalComments(id);
+  renderModalCommentForm(id);
 }
 
 function closePost() {
@@ -775,17 +793,67 @@ function closePost() {
 }
 
 function closePostOverlay(e) {
-  // Only close if clicking directly on the dark overlay, not the panel
-  if (e.target === document.getElementById('blog-modal-overlay')) {
-    closePost();
+  if (e.target === document.getElementById('blog-modal-overlay')) closePost();
+}
+
+// ====================================================
+// COMMENTS — Firebase Realtime Database (with localStorage fallback)
+// ====================================================
+
+// ── SETUP ──
+// 1. Go to https://console.firebase.google.com
+// 2. Create a project → Realtime Database → Start in test mode
+// 3. Copy your database URL (looks like: https://your-app-default-rtdb.firebaseio.com)
+// 4. Paste it below (replace the placeholder)
+const FIREBASE_URL = 'https://nischal-portfolio-default-rtdb.firebaseio.com'; // ← PASTE YOUR URL HERE
+
+function firebaseEnabled() {
+  return FIREBASE_URL && !FIREBASE_URL.includes('YOUR_PROJECT');
+}
+
+// ── GET comments for a post ──
+async function getComments(postId) {
+  if (!firebaseEnabled()) {
+    try { return JSON.parse(store.get('blog-comments-' + postId) || '[]'); } catch(e) { return []; }
+  }
+  try {
+    const res  = await fetch(`${FIREBASE_URL}/comments/post${postId}.json`);
+    const data = await res.json();
+    if (!data) return [];
+    // Firebase returns an object keyed by push IDs — convert to sorted array
+    return Object.entries(data)
+      .map(([key, val]) => ({ ...val, _key: key }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+  } catch(e) {
+    console.warn('Firebase read failed, falling back to localStorage', e);
+    try { return JSON.parse(store.get('blog-comments-' + postId) || '[]'); } catch(e2) { return []; }
   }
 }
 
-// ====== COMMENTS ======
-function getComments(postId) {
-  try { return JSON.parse(store.get('blog-comments-' + postId) || '[]'); } catch(e) { return []; }
+// ── ADD a single comment (Firebase push) ──
+async function addComment(postId, comment) {
+  if (!firebaseEnabled()) {
+    const existing = JSON.parse(store.get('blog-comments-' + postId) || '[]');
+    existing.push(comment);
+    store.set('blog-comments-' + postId, JSON.stringify(existing));
+    return true;
+  }
+  try {
+    const res = await fetch(`${FIREBASE_URL}/comments/post${postId}.json`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(comment),
+    });
+    if (!res.ok) throw new Error('Firebase POST failed: ' + res.status);
+    return true;
+  } catch(e) {
+    console.warn('Firebase write failed, falling back to localStorage', e);
+    const existing = JSON.parse(store.get('blog-comments-' + postId) || '[]');
+    existing.push(comment);
+    store.set('blog-comments-' + postId, JSON.stringify(existing));
+    return false;
+  }
 }
-function saveComments(postId, arr) { store.set('blog-comments-' + postId, JSON.stringify(arr)); }
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -795,13 +863,22 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
 
-function renderModalComments(postId) {
+// ── RENDER comments list ──
+async function renderModalComments(postId) {
   const list  = document.getElementById('modal-comments-list');
   const count = document.getElementById('modal-comment-count');
   if (!list) return;
-  const comments = getComments(postId);
+
+  // Show loading state
+  list.innerHTML = '<div class="comments-loading"><span class="comments-loading-dot"></span><span class="comments-loading-dot"></span><span class="comments-loading-dot"></span></div>';
+  list.style.background = 'var(--surface)';
+  list.style.border = '1px solid var(--border)';
+  if (count) count.textContent = 'Loading…';
+
+  const comments = await getComments(postId);
   const me = getCurrentUser();
-  count.textContent = comments.length + (comments.length === 1 ? ' Comment' : ' Comments');
+
+  if (count) count.textContent = comments.length + (comments.length === 1 ? ' Comment' : ' Comments');
 
   if (comments.length === 0) {
     list.innerHTML = '<div style="padding:1.5rem;font-size:0.72rem;color:var(--muted);font-style:italic;">No comments yet — be the first to share your thoughts.</div>';
@@ -809,27 +886,30 @@ function renderModalComments(postId) {
     list.style.border = '1px solid var(--border)';
     return;
   }
+
   list.style.background = 'var(--border)';
   list.style.border = 'none';
   list.innerHTML = comments.map(c => {
     const isMe = me && me.username.toLowerCase() === c.author.toLowerCase();
     return `
-    <div class="comment-item${isMe ? ' comment-mine' : ''}">
-      <div class="comment-header">
-        <div class="comment-avatar" style="${isMe ? 'background:var(--surface2);border-color:var(--accent);' : ''}">${escHtml(c.author.charAt(0).toUpperCase())}</div>
-        <span class="comment-author">${escHtml(c.author)}</span>
-        ${isMe ? '<span class="comment-you-badge">you</span>' : ''}
-        <span class="comment-date">${formatDate(c.date)}</span>
+      <div class="comment-item${isMe ? ' comment-mine' : ''}">
+        <div class="comment-header">
+          <div class="comment-avatar" style="${isMe ? 'background:var(--surface2);border-color:var(--accent);' : ''}">${escHtml(c.author.charAt(0).toUpperCase())}</div>
+          <span class="comment-author">${escHtml(c.author)}</span>
+          ${isMe ? '<span class="comment-you-badge">you</span>' : ''}
+          <span class="comment-date">${formatDate(c.date)}</span>
+        </div>
+        <div class="comment-text">${escHtml(c.text)}</div>
       </div>
-      <div class="comment-text">${escHtml(c.text)}</div>
-    </div>
-  `}).join('');
+    `;
+  }).join('');
 }
 
 function renderModalCommentForm(postId) {
   const area = document.getElementById('modal-comment-form');
   if (!area) return;
   const user = getCurrentUser();
+  const usingFirebase = firebaseEnabled();
 
   if (user) {
     area.innerHTML = `
@@ -837,9 +917,8 @@ function renderModalCommentForm(postId) {
         <textarea id="modal-comment-textarea" placeholder="Share your thoughts on this post..."></textarea>
         <div class="comment-form-footer">
           <span class="comment-logged-as">Commenting as <strong>${escHtml(user.username)}</strong></span>
-          <button class="btn btn-accent" onclick="submitModalComment(${postId})">Post Comment</button>
+          <button class="btn btn-accent" id="comment-submit-btn" onclick="submitModalComment(${postId})">Post Comment</button>
         </div>
-        <p class="comment-local-note">💡 Comments are stored in this browser. Other accounts on this same browser can see them, but not visitors on other devices.</p>
       </div>
     `;
   } else {
@@ -856,22 +935,27 @@ function updateModalCommentForm() {
   if (currentPostId) renderModalCommentForm(currentPostId);
 }
 
-function submitModalComment(postId) {
+async function submitModalComment(postId) {
   const user = getCurrentUser();
   if (!user) { showToast('Please log in to comment.', 'error'); return; }
 
   const ta   = document.getElementById('modal-comment-textarea');
   const text = ta ? ta.value.trim() : '';
-  if (!text)          { showToast('Comment cannot be empty.', 'error'); return; }
-  if (text.length > 1000) { showToast('Comment too long (max 1000 chars).', 'error'); return; }
+  if (!text)             { showToast('Comment cannot be empty.', 'error'); return; }
+  if (text.length > 1000){ showToast('Comment too long (max 1000 chars).', 'error'); return; }
 
-  const comments = getComments(postId);
-  comments.push({ author: user.username, text, date: new Date().toISOString() });
-  saveComments(postId, comments);
+  // Disable button while saving
+  const btn = document.getElementById('comment-submit-btn');
+  if (btn) { btn.textContent = 'Posting…'; btn.disabled = true; }
 
-  renderModalComments(postId);
+  const comment = { author: user.username, text, date: new Date().toISOString() };
+  const ok = await addComment(postId, comment);
+
+  if (ok !== false) showToast('Comment posted!', 'success');
+  else showToast('Posted locally (Firebase unavailable).', 'success');
+
+  await renderModalComments(postId);
   renderModalCommentForm(postId);
-  showToast('Comment posted!', 'success');
 }
 
 // ====== ESC KEY to close modal ======
