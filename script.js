@@ -17,7 +17,7 @@ function showPage(page) {
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (page === 'login') { refreshLoginPage(); startStarfield('star-canvas'); }
-  if (page === 'blog') updateCardCounts();
+  if (page === 'blog')  { updateCardCounts(); startStarfield('blog-star-bg'); }
 }
 
 // ====== TOAST ======
