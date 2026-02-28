@@ -462,29 +462,56 @@ function switchAuthTab(tab) {
   const tl   = document.getElementById('tab-login');
   const tr   = document.getElementById('tab-register');
   const pill = document.getElementById('auth-pill-bg');
+  const pillRow = document.getElementById('auth-pill-row');
 
-  // Hide all panels first
-  lf.style.display = 'none';
-  rf.style.display = 'none';
-  if (ff) ff.style.display = 'none';
+  // Hide all panels
+  [lf, rf, ff].forEach(el => { if (el) el.style.display = 'none'; });
 
   if (tab === 'login') {
     lf.style.display = '';
     tl.classList.add('active'); tr.classList.remove('active');
     if (pill) pill.classList.remove('right');
-    document.getElementById('login-error').style.display = 'none';
+    if (pillRow) pillRow.style.display = '';
+    const err = document.getElementById('login-error');
+    if (err) err.style.display = 'none';
+
   } else if (tab === 'register') {
     rf.style.display = '';
     tl.classList.remove('active'); tr.classList.add('active');
     if (pill) pill.classList.add('right');
-    document.getElementById('reg-error').style.display = 'none';
+    if (pillRow) pillRow.style.display = '';
+    const err = document.getElementById('reg-error');
+    if (err) err.style.display = 'none';
+
   } else if (tab === 'forgot') {
+    // Forgot gets its own clean panel — hide the pill entirely
+    if (pillRow) pillRow.style.display = 'none';
     if (ff) ff.style.display = '';
-    // Neither pill active
-    tl.classList.remove('active'); tr.classList.remove('active');
-    if (pill) pill.classList.remove('right');
-    document.getElementById('forgot-error').style.display = 'none';
-    document.getElementById('forgot-success').style.display = 'none';
+    const err = document.getElementById('forgot-error');
+    const ok  = document.getElementById('forgot-success');
+    if (err) err.style.display = 'none';
+    if (ok)  ok.style.display  = 'none';
+    // Clear forgot fields
+    ['forgot-username','forgot-newpass','forgot-confirm'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }
+}
+
+// ====== EYE TOGGLE ======
+function toggleEye(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isHidden = input.type === 'password';
+  input.type = isHidden ? 'text' : 'password';
+  btn.classList.toggle('visible', isHidden);
+  // Swap icon
+  const icon = btn.querySelector('.eye-icon');
+  if (isHidden) {
+    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
   }
 }
 
@@ -577,6 +604,28 @@ function handleLogout() {
   refreshLoginPage();
   updateModalCommentForm();
   showToast('Logged out.', 'success');
+}
+
+// ====== DELETE ACCOUNT ======
+function confirmDeleteAccount() {
+  const u = getCurrentUser();
+  if (!u) return;
+  const confirmed = window.confirm(
+    `Delete account "${u.username}"?\n\nThis will permanently remove your account. Your comments will remain but show as posted. This cannot be undone.`
+  );
+  if (confirmed) handleDeleteAccount();
+}
+
+function handleDeleteAccount() {
+  const u = getCurrentUser();
+  if (!u) return;
+  const users = getUsers();
+  delete users[u.username.toLowerCase()];
+  saveUsers(users);
+  store.del('portfolio-current-user');
+  refreshLoginPage();
+  updateModalCommentForm();
+  showToast('Account deleted. Sorry to see you go.', 'success');
 }
 
 // ====== BLOG POST DATA ======
@@ -790,6 +839,7 @@ function renderModalCommentForm(postId) {
           <span class="comment-logged-as">Commenting as <strong>${escHtml(user.username)}</strong></span>
           <button class="btn btn-accent" onclick="submitModalComment(${postId})">Post Comment</button>
         </div>
+        <p class="comment-local-note">💡 Comments are stored in this browser. Other accounts on this same browser can see them, but not visitors on other devices.</p>
       </div>
     `;
   } else {
