@@ -19,7 +19,7 @@
     <a onclick="showPage('achievements')">Timeline</a>
     <a onclick="showPage('skills')">Skills</a>
     <a onclick="showPage('about')">About</a>
-    <a onclick="showPage('contact')">Contact</a>
+   <a onclick="showPage('game')">Games</a>
     <a onclick="showPage('blog')">Blog</a>
     <a onclick="showPage('login')" id="nav-login-btn">Login</a>
   </nav>
@@ -382,43 +382,43 @@
 
   </section>
 </div>
-<!-- ====== CONTACT ====== 
+<!-- ====== CONTACT (now Games) ====== -->
 <div id="page-contact" class="page">
   <section>
-    <div class="section-label">05 — Connect</div>
-    <h2 class="section-title">Get In<br><em style="font-style:italic;color:var(--accent2);">Touch</em></h2>
-    <div class="contact-grid">
-      <div class="contact-card"><div class="contact-type">Email</div><div class="contact-value">college.nischal@gmail.com</div></div>
-      <div class="contact-card"><div class="contact-type">LinkedIn</div><div class="contact-value"><a href="https://www.linkedin.com/in/nischal-shah-59a798250/">linkedin.com/in/nischalshah</a></div></div>
-      <div class="contact-card"><div class="contact-type">Instagram</div><div class="contact-value"><a href="https://www.instagram.com/unstablenebula/">instagram.com/unstablenebula</a></div></div>
-    </div>
-    <div class="contact-form-wrapper">
-      <div class="contact-form-header">
-        <div class="section-label" style="margin-bottom:0.5rem;">Send a Message</div>
-        <p class="contact-form-sub">Fill in the form below and I'll get back to you.</p>
-      </div>
-      <form class="contact-form" id="contact-form" onsubmit="submitContactForm(event)">
-        <div class="cf-row">
-          <div class="form-group"><label class="form-label">Your Name</label><input class="form-input" id="cf-name" name="name" type="text" placeholder="Your name" required></div>
-          <div class="form-group"><label class="form-label">Your Email</label><input class="form-input" id="cf-email" name="email" type="email" placeholder="email@example.com" required></div>
-        </div>
-        <div class="form-group"><label class="form-label">Subject</label><input class="form-input" id="cf-subject" name="subject" type="text" placeholder="Inquiry / Collaboration / ..."></div>
-        <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea cf-textarea" id="cf-message" name="message" placeholder="Hi there!!" required></textarea></div>
-        <div class="cf-footer">
-          <span class="cf-note">&#128274; Your message is saved securely.</span>
-          <button class="btn btn-accent" type="submit" id="cf-submit-btn">Send Message</button>
-        </div>
-      </form>
-      <div id="cf-success" class="cf-success" style="display:none;">
-        <div class="cf-success-icon">&#10003;</div>
-        <div class="cf-success-title">Message Sent!</div>
-        <div class="cf-success-sub">Thank you for reaching out. I'll reply soon.</div>
-        <button class="btn btn-muted" style="margin-top:1.5rem;" onclick="resetContactForm()">Send Another</button>
+    <div class="section-label">05 — Play</div>
+    <h2 class="section-title">Mini<br><em style="font-style:italic;color:var(--accent2);">Games</em></h2>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:2.5rem;line-height:1.8;">Two browser games built around astronomy. Click a game to launch it.</p>
+
+    <!-- Game selection hub -->
+    <div id="games-hub">
+      <div class="games-grid">
+
+        <button class="game-card" onclick="Games.open('starmapper')">
+          <div class="game-card-icon">⭐</div>
+          <div class="game-card-tag">Puzzle · Astronomy</div>
+          <div class="game-card-name">Star Mapper</div>
+          <div class="game-card-desc">A constellation appears as unlabelled dots. Connect them in the correct order to trace the shape. Each round a new constellation — how many can you map?</div>
+          <div class="game-card-cta">Play Now →</div>
+          <div class="game-card-hover-line"></div>
+        </button>
+
+        <button class="game-card" onclick="Games.open('asteroid')">
+          <div class="game-card-icon">☄️</div>
+          <div class="game-card-tag">Action · Space</div>
+          <div class="game-card-name">Asteroid Defender</div>
+          <div class="game-card-desc">Asteroids are hurtling toward Earth. Move your telescope and click to observe (destroy) them before they hit the ground. Red ones are fast — watch out!</div>
+          <div class="game-card-cta">Play Now →</div>
+          <div class="game-card-hover-line"></div>
+        </button>
+
       </div>
     </div>
+
+    <!-- Active game renders here -->
+    <div id="game-container"></div>
+
   </section>
 </div>
--->
 <!-- ====== LOGIN ====== -->
 <div id="page-login" class="page">
 
