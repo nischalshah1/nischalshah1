@@ -384,17 +384,62 @@ const ConstellationLoader = (function () {
   return { play };
 })();
 
-// ── Hook loader into showPage ──
+// ====================================================
+// TIMELINE SCROLL ANIMATION
+// ====================================================
+const TimelineAnimator = (function () {
+  let observed = false;
+
+  function init() {
+    const tl = document.getElementById('timeline');
+    if (!tl || observed) return;
+    observed = true;
+    tl.classList.add('tl-animate');
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('tl-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    tl.querySelectorAll('.tl-item, .tl-year-marker, .tl-end-cap').forEach(el => io.observe(el));
+  }
+
+  function reset() {
+    observed = false;
+    const tl = document.getElementById('timeline');
+    if (!tl) return;
+    tl.classList.remove('tl-animate');
+    tl.querySelectorAll('.tl-item, .tl-year-marker, .tl-end-cap')
+      .forEach(el => el.classList.remove('tl-visible'));
+    setTimeout(init, 80);
+  }
+
+  return { init, reset };
+})();
+
+// ── Single unified showPage wrapper ──
 const _origShowPage = showPage;
 showPage = function(page) {
   ConstellationLoader.play(page);
-  // small delay so overlay is visible before page content switches
-  setTimeout(() => _origShowPage(page), 80);
+  setTimeout(() => {
+    _origShowPage(page);
+    if (page === 'achievements') {
+      setTimeout(() => TimelineAnimator.reset(), 120);
+    }
+  }, 80);
 };
 
 // ── Play on initial page load ──
 window.addEventListener('DOMContentLoaded', () => {
   ConstellationLoader.play('home');
+  // Init timeline if starting on achievements
+  if (document.getElementById('page-achievements').classList.contains('active')) {
+    TimelineAnimator.init();
+  }
 });
 
 
